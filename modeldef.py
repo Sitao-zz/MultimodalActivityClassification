@@ -7,6 +7,7 @@ from keras.layers.convolutional import (Conv2D, MaxPooling3D, Conv3D, MaxPooling
 from collections import deque
 import sys
 
+
 class ResearchModels():
     def __init__(self, nb_classes, model, seq_length, features, saved_model=None):
         """
@@ -25,9 +26,9 @@ class ResearchModels():
         self.feature_queue = deque()
 
         # Set the metrics. Only use top k if there's a need.
-        #metrics = ['accuracy']        
+        # metrics = ['accuracy']
         metrics = ['accuracy']
-        
+
         if self.nb_classes >= 10:
             metrics.append('top_k_categorical_accuracy')
 
@@ -49,15 +50,15 @@ class ResearchModels():
 
         # Now compile the network.
         optimizer = Adam(lr=1e-4, decay=1e-6, clipnorm=0.6)
-        #optimizer = RMSprop(lr=1e-5, rho=0.9, epsilon=1e-08, decay=0.00001)
-        #optimizer = SGD(lr=0.2, sdecay=1e-6, momentum=0.9, nesterov=True, clipnorm=0.5)
-        #self.model.compile(loss='categorical_crossentropy', optimizer=optimizer,
+        # optimizer = RMSprop(lr=1e-5, rho=0.9, epsilon=1e-08, decay=0.00001)
+        # optimizer = SGD(lr=0.2, sdecay=1e-6, momentum=0.9, nesterov=True, clipnorm=0.5)
+        # self.model.compile(loss='categorical_crossentropy', optimizer=optimizer,
         #                   metrics=metrics)
         self.model.compile(loss='categorical_crossentropy', optimizer=optimizer,
                            metrics=metrics)
 
         print(self.model.summary())
-    
+
     def lstm_hof(self):
         """Build a simple LSTM network. We pass the extracted features from
         our CNN to this model predominently."""
@@ -72,7 +73,7 @@ class ResearchModels():
         model.add(Dense(self.nb_classes, activation='softmax'))
 
         return model
-    
+
     def lstm(self):
         """Build a simple LSTM network. We pass the extracted features from
         our CNN to this model predominently."""

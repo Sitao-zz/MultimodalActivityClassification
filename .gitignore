@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+.idea/
+
+# My archived files
+archive/
+dataset/
+*.docx
