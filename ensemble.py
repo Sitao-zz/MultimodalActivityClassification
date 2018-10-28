@@ -20,7 +20,8 @@ from keras.optimizers import Adam
 # %%
 import sys
 
-sys.path.append("C:\\Users\\Sitao\\Documents\\CA_KE5208\\Multimodal\\dataset")
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(ROOT_DIR + "\\dataset")
 import dataprep as cd
 
 dataset, trainsets, validationsets = cd.definitions()
@@ -46,7 +47,7 @@ def pre_processing_skeleton(data):  # (200,6)
 
 
 # %%
-#np.where(data_inertial[1] == max(data_inertial[1]))
+# np.where(data_inertial[1] == max(data_inertial[1]))
 # %%
 trainX_skeleton = [[], [], [], [], []]
 trainY_skeleton = [[], [], [], [], []]
@@ -134,6 +135,9 @@ main_output = Dense(units=28, activation='softmax', name='main_output')(dense_1)
 
 model = Model(inputs=[inertial_input, skeleton_input], outputs=[main_output, inertial_out, skeleton_out])
 model.compile(loss='mse', optimizer='rmsprop', metrics=['mae', 'acc'])
+
+print(model.summary())
+
 # %%
 from keras.callbacks import EarlyStopping
 
