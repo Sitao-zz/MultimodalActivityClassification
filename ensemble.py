@@ -17,24 +17,23 @@ from keras.models import Sequential, Model
 from keras.layers import Activation, Dense, LSTM, Input, Concatenate, Flatten
 from keras.optimizers import Adam
 
-from pandas import ewma
 # %%
 import sys
 
 sys.path.append("E:\\KE5208 Sense making\\dataset")
-import cross_validation_data as cd
+import dataprep as cd
 
 dataset, trainsets, validationsets = cd.definitions()
 
 
 # %%
 def pre_processing_inertial(data):  # (200,6)
-    predata = ewma(data, span=3)
+    predata = pd.DataFrame(data).ewm(span=3).mean().values  # convert the dataframe into numpy array
     if data.shape[0] > 107:
         x = data.shape[0] // 2
         predata = predata[(x - 53):(x + 54), :]
 
-    return predata;
+    return predata
 
 
 # %%
@@ -43,11 +42,11 @@ def pre_processing_skeleton(data):  # (200,6)
     if data.shape[2] > 41:
         x = data.shape[2] // 2
         predata = predata[:, :, (x - 20):(x + 21)]
-    return predata;
+    return predata
 
 
 # %%
-np.where(data_inertial[1] == max(data_inertial[1]))
+#np.where(data_inertial[1] == max(data_inertial[1]))
 # %%
 trainX_skeleton = [[], [], [], [], []]
 trainY_skeleton = [[], [], [], [], []]
