@@ -20,7 +20,7 @@ from keras.optimizers import Adam
 # %%
 import sys
 
-sys.path.append("E:\\KE5208 Sense making\\dataset")
+sys.path.append("C:\\Users\\Sitao\\Documents\\CA_KE5208\\Multimodal\\dataset")
 import dataprep as cd
 
 dataset, trainsets, validationsets = cd.definitions()
@@ -58,8 +58,8 @@ testX_inertial = [[], [], [], [], []]
 testY_inertial = [[], [], [], [], []]
 for i in range(5):
     for j in trainsets[i]:
-        dic_mat_inertial = scio.loadmat("E:\\KE5208 Sense making\\dataset\\Inertial\\" + j + "_inertial.mat")
-        dic_mat_skeleton = scio.loadmat("E:\\KE5208 Sense making\\dataset\\Skeleton\\" + j + "_skeleton.mat")
+        dic_mat_inertial = scio.loadmat("dataset\\Inertial\\" + j + "_inertial.mat")
+        dic_mat_skeleton = scio.loadmat("dataset\\Skeleton\\" + j + "_skeleton.mat")
         data_skeleton = dic_mat_skeleton["d_skel"]
         data_inertial = dic_mat_inertial["d_iner"]
         # data = data[:,:,:41]
@@ -78,8 +78,8 @@ for i in range(5):
         trainY_inertial[i].append(int(j.split('_')[0][1:]))
 
     for j in validationsets[i]:
-        dic_mat_inertial = scio.loadmat("E:\\KE5208 Sense making\\dataset\\Inertial\\" + j + "_inertial.mat")
-        dic_mat_skeleton = scio.loadmat("E:\\KE5208 Sense making\\dataset\\Skeleton\\" + j + "_skeleton.mat")
+        dic_mat_inertial = scio.loadmat("dataset\\Inertial\\" + j + "_inertial.mat")
+        dic_mat_skeleton = scio.loadmat("dataset\\Skeleton\\" + j + "_skeleton.mat")
         data_skeleton = dic_mat_skeleton["d_skel"]
         data_inertial = dic_mat_inertial["d_iner"]
 
