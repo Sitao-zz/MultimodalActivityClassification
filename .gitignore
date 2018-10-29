@@ -107,4 +107,5 @@ venv.bak/
 # My archived files
 archive/
 dataset/
+dataset/RGB/
 *.docx

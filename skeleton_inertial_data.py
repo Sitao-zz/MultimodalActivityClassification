@@ -122,7 +122,7 @@ for s in dataset:
 
 
 def rescale(input_list, size):
-    skip = len(input_list) // size
+    skip = max(len(input_list) // size, 1)
     # Build our new output.
     output = [input_list[i] for i in range(0, len(input_list), skip)]
     # Cut off the last one if needed.
