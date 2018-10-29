@@ -8,10 +8,10 @@ from dataprep import definitions
 dataset, trainsets, validationsets = definitions()
 
 """ Inertial Dataset """
-inertial_dataset = {i: {'inertial': sio.loadmat('./Inertial/' + i + '_inertial.mat')['d_iner']} for i in dataset}
+inertial_dataset = {i: {'inertial': sio.loadmat('dataset/Inertial/' + i + '_inertial.mat')['d_iner']} for i in dataset}
 
 """ Skeleton Dataset """
-skeletons_dataset = {i: {'sk': sio.loadmat('./Skeleton/' + i + '_skeleton.mat')['d_skel']} for i in dataset}
+skeletons_dataset = {i: {'sk': sio.loadmat('dataset/Skeleton/' + i + '_skeleton.mat')['d_skel']} for i in dataset}
 
 jointType = {'hip_center': 0, 'spine': 1, 'shoulder_c': 2, 'head': 3,
              'shoulder_r': 4, 'elbow_r': 5, 'wrist_r': 6, 'hand_r': 7,
@@ -65,7 +65,7 @@ def angle_between(a, b, c):
     return np.array(angles)
 
 
-ewma = pd.stats.moments.ewma
+# ewma = pd.stats.moments.ewma
 for s in dataset:
     print(s)
     # Joint Smoothing
@@ -74,8 +74,8 @@ for s in dataset:
         for c in range(len(sk[j])):
             # take EWMA in both directions with a smaller span term
             coord = sk[j][c]
-            fwd = ewma(coord, span=3)  # take EWMA in forward direction
-            bwd = ewma(coord[::-1], span=3)  # take EWMA in backward direction
+            fwd = pd.DataFrame(coord).ewm(span=3).mean().values  # take EWMA in forward direction
+            bwd = pd.DataFrame(coord[::-1]).ewm(span=3).mean().values  # take EWMA in backward direction
             smoothc = np.vstack((fwd, bwd[::-1]))  # lump fwd and bwd together
             smoothc = np.mean(smoothc, axis=0)  # average
             sk[j][c] = smoothc
@@ -86,8 +86,8 @@ for s in dataset:
     for v in range(len(inert[0])):
         # take EWMA in both directions with a smaller span term
         seq = np.array([t[v] for t in inert])
-        fwd = ewma(seq, span=10)  # take EWMA in forward direction
-        bwd = ewma(seq[::-1], span=10)  # take EWMA in backward direction
+        fwd = pd.DataFrame(seq).ewm(span=10).mean().values  # take EWMA in forward direction
+        bwd = pd.DataFrame(seq[::-1]).ewm(span=10).mean().values  # take EWMA in backward direction
         smoothc = np.vstack((fwd, bwd[::-1]))  # lump fwd and bwd together
         smoothc = np.mean(smoothc, axis=0)  # average
         inertial_dataset[s][inertials[v]] = smoothc
