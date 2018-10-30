@@ -7,7 +7,7 @@ import pickle as pk
 from dataprep import definitions
 
 dataset, trainsets, validationsets = definitions()
-depth_dataset = {i: {'depth': sio.loadmat('./Depth/' + i + '_depth.mat')['d_depth']} for i in dataset}
+depth_dataset = {i: {'depth': sio.loadmat('dataset/Depth/' + i + '_depth.mat')['d_depth']} for i in dataset}
 
 
 def processRGBData(cap, sub):
@@ -82,7 +82,7 @@ def processRGBData(cap, sub):
 hofset = []
 for i in dataset:
     print("processing " + i)
-    cap = cv2.VideoCapture('./RGB/' + i + '_color.avi')
+    cap = cv2.VideoCapture('dataset/RGB/' + i + '_color.avi')
     hofset.append(processRGBData(cap, i))
 
 pk.dump(hofset, open("hofset.pk", "wb"))
