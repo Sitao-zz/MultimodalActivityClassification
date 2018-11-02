@@ -4,7 +4,6 @@ from keras.models import Model
 
 
 def create_lstm_ensemble():
-    global model
     inertial_input = Input(shape=(107, 6), name="iner_lstm_input")
     iner_lstm_1 = LSTM(50, input_shape=(107, 6), return_sequences=True)(inertial_input)
     iner_lstm_out = LSTM(100, return_sequences=False)(iner_lstm_1)
