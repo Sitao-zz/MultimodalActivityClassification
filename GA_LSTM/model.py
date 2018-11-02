@@ -4,6 +4,7 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM
 from keras.callbacks import EarlyStopping
+from keras.layers import Dense, Flatten, Dropout
 
 
 class Model:
@@ -16,10 +17,15 @@ class Model:
     def evaluate(self, num_neuros, num_epoch):
         np.random.seed(7)
         model = Sequential()
-        model.add(LSTM(num_neuros, input_shape=(326, 6)))
+        model.add(LSTM(num_neuros, return_sequences=True, input_shape=(326, 6),
+                       dropout=0.3, recurrent_dropout=0.3))
+        model.add(Flatten())
+        model.add(Dense(512, activation='relu'))
+        model.add(Dropout(0.01))
         model.add(Dense(3, activation='softmax'))
         model.compile(loss='categorical_crossentropy', optimizer='sgd', metrics=['accuracy'])
         print(model.summary())
+
 
         model.fit(self.X_train, self.Y_train,
                   callbacks=[EarlyStopping(monitor='acc', patience=10, verbose=0, mode='auto')],
