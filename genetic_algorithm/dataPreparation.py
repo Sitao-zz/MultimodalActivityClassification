@@ -1,24 +1,13 @@
-import scipy.io as sio
+from pathlib import Path
+
+import numpy as np
 import pandas as pd
 import scipy.io
-import numpy as np
-import pandas as pd
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import LSTM
 from keras.preprocessing import sequence
-from pathlib import Path
-from matplotlib import pyplot as plt
 from keras.utils import to_categorical
-import matplotlib
-matplotlib.use('AGG')
-import numpy as np
 
-
-from sklearn.model_selection import train_test_split
 
 def definitions():
-
     def import_depth_data(action, subject, trial):
         filename = f'dataset/Depth/a{action}_s{subject}_t{trial}_depth.mat'
         if Path(filename).is_file():
@@ -125,4 +114,4 @@ def definitions():
     print('Y_train.shape:', Y_train.shape)
     print('X_test.shape:', X_test.shape)
     print('Y_test.shape:', Y_test.shape)
-    return X_train, X_test, Y_train ,Y_test
+    return X_train, X_test, Y_train, Y_test

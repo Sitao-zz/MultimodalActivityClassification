@@ -3,11 +3,9 @@
 #       Flow of the training process        #
 #                                           #
 #############################################
-from genetic import GeneticEngine
-import pandas as pd
+from genetic_algorithm.genetic import GeneticEngine
 from datetime import datetime as dt
-import dataPreparation as cd
-
+from genetic_algorithm import dataPreparation as cd
 
 start = dt.now()
 X_train, X_test, Y_train ,Y_test = cd.definitions()

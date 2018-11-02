@@ -1,4 +1,4 @@
-from  model import Model
+from genetic_algorithm.model import Model
 import random
 import numpy
 
