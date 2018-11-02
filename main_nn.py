@@ -6,16 +6,13 @@ Created on Sun Nov  5 22:14:10 2017
 """
 
 import os
-import scipy.io as scio
+
 import numpy as np
 import pandas as pd
+import scipy.io as scio
+from keras.models import Input
 
 np.random.seed(1337)
-
-import keras.utils
-from keras.models import Sequential, Model
-from keras.layers import Activation, Dense, LSTM, Input, Concatenate, Flatten
-from keras.optimizers import Adam
 
 # %%
 import sys
@@ -115,65 +112,50 @@ for i in range(5):
     testY_inertial[i] = label_binarizer.transform(testY_inertial[i])
 
 # %%
-inertial_input = Input(shape=(107, 6), name="iner_lstm_input")
-iner_lstm_1 = LSTM(50, input_shape=(107, 6), return_sequences=True)(inertial_input)
-iner_lstm_out = LSTM(100, return_sequences=False)(iner_lstm_1)
-iner_dense = Dense(50)(iner_lstm_out)
-inertial_out = Dense(units=28, name="inertial_output")(iner_dense)
+from models.nn_mlpc import create_mlpc
+from utils import compile_and_train_early_strop, visualize_history
 
-skeleton_input = Input(shape=(41, 60), name="ske_lstm_input")
-ske_lstm_1 = LSTM(128, input_shape=(41, 60), return_sequences=True)(skeleton_input)
-ske_lstm_out = LSTM(256, return_sequences=False)(ske_lstm_1)
-ske_dense = Dense(128)(ske_lstm_out)
-skeleton_out = Dense(units=28, name="skeleton_output")(ske_dense)
+batch_size = 32
+epochs = 200
+num_classes = 28
+model_input_iner = Input(shape=(107, 6))
+model_iner = create_mlpc(model_input_iner, num_classes)
 
-merge = keras.layers.concatenate([iner_lstm_out, ske_lstm_out])
+model_input_ske = Input(shape=(41, 60))
+model_ske = create_mlpc(model_input_ske, num_classes)
 
-dense_1 = Dense(128, activation='relu')(merge)
-# dense_2 = Dense(128, activation = 'relu')(dense_1)
-main_output = Dense(units=28, activation='softmax', name='main_output')(dense_1)
-
-model = Model(inputs=[inertial_input, skeleton_input], outputs=[main_output, inertial_out, skeleton_out])
-model.compile(loss='mse', optimizer='rmsprop', metrics=['mae', 'acc'])
-
-print(model.summary())
-
-# %%
-from keras.callbacks import EarlyStopping
-
-avg_val_acc = 0
-avg_mae = 0
-avg_loss = 0
 avg_val_acc_ske = 0
-avg_mae_ske = 0
 avg_loss_ske = 0
 avg_val_acc_iner = 0
-avg_mae_iner = 0
 avg_loss_iner = 0
 
 for i in range(5):
-    X_iner = trainX_inertial[i]
-    X_ske = trainX_skeleton[i]
-    hist = model.fit([X_iner, X_ske], [trainY_skeleton[i], trainY_inertial[i], trainY_skeleton[i]], validation_data=(
-    [testX_inertial[i], testX_skeleton[i]], [testY_skeleton[i], testY_skeleton[i], testY_skeleton[i]]),
-                     callbacks=[EarlyStopping(monitor='val_main_output_acc', patience=10, verbose=1, mode='auto')],
-                     epochs=200)
-    avg_mae += hist.history['val_main_output_mean_absolute_error'][-1]
-    avg_loss += hist.history['val_main_output_loss'][-1]
-    avg_val_acc += hist.history['val_main_output_acc'][-1]
-    avg_mae_ske += hist.history['val_skeleton_output_mean_absolute_error'][-1]
-    avg_loss_ske += hist.history['val_skeleton_output_loss'][-1]
-    avg_val_acc_ske += hist.history['val_skeleton_output_acc'][-1]
-    avg_mae_iner += hist.history['val_inertial_output_mean_absolute_error'][-1]
-    avg_loss_iner += hist.history['val_inertial_output_loss'][-1]
-    avg_val_acc_iner += hist.history['val_inertial_output_acc'][-1]
+    X_train_iner = trainX_inertial[i]
+    y_train_iner = trainY_inertial[i]
+    X_test_iner = testX_inertial[i]
+    y_test_iner = testY_inertial[i]
 
-print("average mae : " + str(avg_mae / 5))
-print("average loss : " + str(avg_loss / 5))
-print("average accuracy: " + str(avg_val_acc / 5))
-print("ske average mae: " + str(avg_mae_ske / 5))
+    X_train_ske = trainX_skeleton[i]
+    y_train_ske = trainY_skeleton[i]
+    X_test_ske = testX_skeleton[i]
+    y_test_ske = testY_skeleton[i]
+
+    hist_iner = compile_and_train_early_strop(model_iner, X_train_iner, y_train_iner, X_test_iner, y_test_iner,
+                                              batch_size, num_epochs=epochs)
+
+    hist_ske = compile_and_train_early_strop(model_ske, X_train_ske, y_train_ske, X_test_ske, y_test_ske,
+                                             batch_size, num_epochs=epochs)
+
+    visualize_history(hist_iner, 'inertial_%d-' % i)
+    visualize_history(hist_ske, 'skeleton_%d-' % i)
+
+    avg_loss_ske += hist_ske.history['val_loss'][-1]
+    avg_val_acc_ske += hist_ske.history['val_acc'][-1]
+
+    avg_loss_iner += hist_iner.history['val_loss'][-1]
+    avg_val_acc_iner += hist_iner.history['val_acc'][-1]
+
 print("ske average loss: " + str(avg_loss_ske / 5))
 print("ske average accuracy: " + str(avg_val_acc_ske / 5))
-print("iner average mae: " + str(avg_mae_iner / 5))
 print("iner average loss: " + str(avg_loss_iner / 5))
 print("iner average accuracy: " + str(avg_val_acc_iner / 5))

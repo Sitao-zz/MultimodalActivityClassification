@@ -17,8 +17,8 @@ N_CYCLES = 1
 
 class GeneticEngine:
 
-    def __init__(self, X_train, Y_train,X_test, Y_test):
-        self.model = Model(X_train, Y_train,X_test, Y_test)
+    def __init__(self, X_train, Y_train, X_test, Y_test):
+        self.model = Model(X_train, Y_train, X_test, Y_test)
 
         # To assure reproductibility, the RNG seed is set prior to the items
         # dict initialization. It is also seeded in main().
@@ -32,7 +32,7 @@ class GeneticEngine:
         self.toolbox.register("attr_int", random.randint, NN_MIN, NN_MAX)
         self.toolbox.register("attr_flt", random.randint, NE_MIN, NE_MAX)
         self.toolbox.register("individual", tools.initCycle, creator.Individual,
-                         (self.toolbox.attr_int, self.toolbox.attr_flt), n=N_CYCLES)
+                              (self.toolbox.attr_int, self.toolbox.attr_flt), n=N_CYCLES)
 
         # define the population to be a list of individuals
         self.toolbox.register("population", tools.initRepeat, list, self.toolbox.individual)
@@ -55,13 +55,13 @@ class GeneticEngine:
         """
         print("\n:::: [genetic] individual", ind, "::::")
         start = dt.now()
-        #{260, 5}
-        num_nuros=list(ind)[0]
-        num_epoch=list(ind)[1]
+        # {260, 5}
+        num_nuros = list(ind)[0]
+        num_epoch = list(ind)[1]
 
-        print("number of neuros :",num_nuros)
-        print ("number of num_epoch :",num_epoch)
-        fit_val = self.model.evaluate(num_nuros,num_epoch)
+        print("number of neuros :", num_nuros)
+        print("number of num_epoch :", num_epoch)
+        fit_val = self.model.evaluate(num_nuros, num_epoch)
         print(":::: [genetic] Evaluate individual. fitness value", fit_val, "Duration", dt.now() - start, "::::\n")
         return fit_val, None
 

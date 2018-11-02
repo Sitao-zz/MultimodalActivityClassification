@@ -1,13 +1,14 @@
-import scipy.io
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import LSTM
+import scipy.io
 from keras.preprocessing import sequence
-from pathlib import Path
-from matplotlib import pyplot as plt
 from keras.utils import to_categorical
+from matplotlib import pyplot as plt
+
+from models.lstm_simple import create_lstm_simple
+
 
 def import_depth_data(action, subject, trial):
     filename = f'dataset/Depth/a{action}_s{subject}_t{trial}_depth.mat'
@@ -16,6 +17,7 @@ def import_depth_data(action, subject, trial):
         return mat['d_depth']
     else:
         return None
+
 
 def transform_depth_data(action, subject, trial):
     rows = []
@@ -27,6 +29,7 @@ def transform_depth_data(action, subject, trial):
     result = np.insert(rows, 0, [[action], [subject], [trial], [frame]], axis=1)
     return np.array(result)
 
+
 def transform_depth_data_to_df(action, subject, trial):
     data = transform_depth_data(action, subject, trial)
     if data is None: return None
@@ -34,16 +37,18 @@ def transform_depth_data_to_df(action, subject, trial):
     df.columns = ['action', 'subject', 'trial', 'frame'] + [f'depth_{n}' for n in range(240 * 320)]
     return df
 
+
 def export_depth_data_to_csv(action, subject, trial):
     df = transform_depth_data_to_df(action, subject, trial)
     if df is None: return None
     filename = f'a{action}_s{subject}_t{trial}_depth.csv'
     df.to_csv(filename, index=False)
 
+
 def show_depth_image(action, subject, trial, frame):
     data = import_depth_data(action, subject, trial)
     if data is None: return None
-    plt.imshow(data[:,:,frame], cmap='gray')
+    plt.imshow(data[:, :, frame], cmap='gray')
     plt.axis('off')
     plt.show()
 
@@ -79,6 +84,7 @@ def export_inertial_data_to_csv(action, subject, trial):
     filename = f'a{action}_s{subject}_t{trial}_inertial.csv'
     df.to_csv(filename, index=False)
 
+
 def import_skeleton_data(action, subject, trial):
     filename = f'dataset/Skeleton/a{action}_s{subject}_t{trial}_skeleton.mat'
     if Path(filename).is_file():
@@ -87,19 +93,21 @@ def import_skeleton_data(action, subject, trial):
     else:
         return None
 
+
 def transform_skeleton_data(action, subject, trial):
     matrices = []
     data = import_skeleton_data(action, subject, trial)
     if data is None: return None
     for frame in range(data.shape[2]):
         skelecton_joints = [i + 1 for i in range(20)]
-        matrix = data[:,:,frame]
+        matrix = data[:, :, frame]
         matrix = np.insert(matrix, 0, skelecton_joints, axis=1)
         matrix = np.insert(matrix, 0, frame, axis=1)
         matrices.append(matrix)
     result = np.vstack(tuple(matrices))
     result = np.insert(result, 0, [[action], [subject], [trial]], axis=1)
     return result
+
 
 def transform_skeleton_data_to_df(action, subject, trial):
     data = transform_skeleton_data(action, subject, trial)
@@ -108,11 +116,13 @@ def transform_skeleton_data_to_df(action, subject, trial):
     df.columns = ['action', 'subject', 'trial', 'frame', 'skeleton_joint', 'x', 'y', 'z']
     return df
 
+
 def export_inertial_data_to_csv(action, subject, trial):
     df = transform_skeleton_data_to_df(action, subject, trial)
     if df is None: return None
     filename = f'a{action}_s{subject}_t{trial}_skeleton.csv'
     df.to_csv(filename, index=False)
+
 
 df = transform_depth_data_to_df(1, 1, 1)
 df.head()
@@ -176,7 +186,6 @@ print('Y_train.shape:', Y_train.shape)
 print('X_test.shape:', X_test.shape)
 print('Y_test.shape:', Y_test.shape)
 
-
 # One hot encoding
 Y_train = to_categorical(Y_train, num_classes=len(activities))
 Y_test = to_categorical(Y_test, num_classes=len(activities))
@@ -188,13 +197,7 @@ print('Y_test.shape:', Y_test.shape)
 
 from keras.callbacks import EarlyStopping
 
-# Create the model
-np.random.seed(7)
-model = Sequential()
-model.add(LSTM(200, input_shape=(326, 6)))
-model.add(Dense(len(activities), activation='softmax'))
-model.compile(loss='categorical_crossentropy', optimizer='sgd', metrics=['accuracy'])
-print(model.summary())
+model = create_lstm_simple(len(activities))
 
 # Train model
 history = model.fit(X_train, Y_train, callbacks=[EarlyStopping(monitor='acc', patience=10, verbose=1, mode='auto')],
@@ -202,10 +205,10 @@ history = model.fit(X_train, Y_train, callbacks=[EarlyStopping(monitor='acc', pa
 
 # Evaluate model
 scores = model.evaluate(X_test, Y_test, verbose=0)
-print("Accuracy: %.2f%%" % (scores[1]*100))
-
+print("Accuracy: %.2f%%" % (scores[1] * 100))
 
 import seaborn as sns
+
 sns.set(style="darkgrid")
 plt.plot(history.history['acc'])
 plt.title('RNN LSTM - Activity Classification')

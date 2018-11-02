@@ -5,8 +5,10 @@ from keras.layers import Dense
 from keras.layers import LSTM
 from keras.callbacks import EarlyStopping
 from keras.layers import Dense, Flatten, Dropout
+
+
 class Model:
-    def __init__(self, X_train, Y_train,X_test,Y_test):
+    def __init__(self, X_train, Y_train, X_test, Y_test):
         self.X_train = X_train
         self.Y_train = Y_train
         self.X_test = X_test
@@ -26,7 +28,7 @@ class Model:
 
 
         model.fit(self.X_train, self.Y_train,
-                            callbacks=[EarlyStopping(monitor='acc', patience=10, verbose=0, mode='auto')],
-                            epochs=num_epoch, batch_size=1)
+                  callbacks=[EarlyStopping(monitor='acc', patience=10, verbose=0, mode='auto')],
+                  epochs=num_epoch, batch_size=1)
         scores = model.evaluate(self.X_test, self.Y_test, verbose=0)
         return scores[1]
