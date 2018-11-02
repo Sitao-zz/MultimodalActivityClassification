@@ -16,7 +16,7 @@ from sklearn.model_selection import train_test_split
 
 def definitions():
     def import_depth_data(action, subject, trial):
-        filename = f'dataset/Depth/a{action}_s{subject}_t{trial}_depth.mat'
+        filename = f'../dataset/Depth/a{action}_s{subject}_t{trial}_depth.mat'
         if Path(filename).is_file():
             mat = scipy.io.loadmat(filename)
             return mat['d_depth']
@@ -41,7 +41,7 @@ def definitions():
         return df
 
     def import_inertial_data(action, subject, trial):
-        filename = f'dataset/Inertial/a{action}_s{subject}_t{trial}_inertial.mat'
+        filename = f'../dataset/Inertial/a{action}_s{subject}_t{trial}_inertial.mat'
         if Path(filename).is_file():
             mat = scipy.io.loadmat(filename)
             return mat['d_iner']
@@ -77,7 +77,9 @@ def definitions():
     #     3. right hand wave (wave)
     #     18. two hand push (push)
     #     22. jogging (jog)
-    activities = [3, 18, 22]
+    #activities = [3, 18, 22]
+
+    activities = [1, 2, 3, 4, 5, 6,7,8,9,10,11,12,13,14,15,16,17, 18, 19, 20, 21, 22,23,24, 25, 26, 27]
 
     for index, action in enumerate(activities):
         for subject in range(1, 9):
@@ -121,4 +123,4 @@ def definitions():
     print('Y_train.shape:', Y_train.shape)
     print('X_test.shape:', X_test.shape)
     print('Y_test.shape:', Y_test.shape)
-    return X_train, X_test, Y_train, Y_test
+    return X_train, X_test, Y_train, Y_test ,len(activities)
