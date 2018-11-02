@@ -203,7 +203,7 @@ print(model.summary())
 
 # Train model
 history = model.fit(X_train, Y_train, callbacks=[EarlyStopping(monitor='acc', patience=10, verbose=1, mode='auto')],
-                    epochs=20, batch_size=1)
+                    epochs=30, batch_size=100)
 
 # Evaluate model
 scores = model.evaluate(X_test, Y_test, verbose=0)

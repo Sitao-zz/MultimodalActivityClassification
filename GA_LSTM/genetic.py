@@ -10,29 +10,31 @@ from datetime import datetime as dt
 
 IND_INIT_SIZE = 2
 NBR_ITEMS = 200
-NN_MIN, NN_MAX = 100, 1000
-NE_MIN, NE_MAX = 5, 100
+NN_MIN, NN_MAX = 100, 600
+#NE_MIN, NE_MAX = 5, 100
+Dp_MIN,Dp_MAX = 0.01, 0.5
 N_CYCLES = 1
 
 
 class GeneticEngine:
 
-    def __init__(self, X_train, Y_train, X_test, Y_test):
-        self.model = Model(X_train, Y_train, X_test, Y_test)
+    def __init__(self, X_train, Y_train, X_test, Y_test,numClass):
+        self.model = Model(X_train, Y_train, X_test, Y_test,numClass)
 
         # To assure reproductibility, the RNG seed is set prior to the items
         # dict initialization. It is also seeded in main().
         random.seed(64)
 
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
-        creator.create("Individual", set, fitness=creator.FitnessMax)
+        creator.create("Individual", list, fitness=creator.FitnessMax)
 
         self.toolbox = base.Toolbox()
 
-        self.toolbox.register("attr_int", random.randint, NN_MIN, NN_MAX)
-        self.toolbox.register("attr_flt", random.randint, NE_MIN, NE_MAX)
+        self.toolbox.register("attr_nn", random.randint, NN_MIN, NN_MAX)
+        #self.toolbox.register("attr_ne", random.randint, NE_MIN, NE_MAX)
+        self.toolbox.register("attr_dp",random.uniform,Dp_MIN,Dp_MAX)
         self.toolbox.register("individual", tools.initCycle, creator.Individual,
-                              (self.toolbox.attr_int, self.toolbox.attr_flt), n=N_CYCLES)
+                              (self.toolbox.attr_nn, self.toolbox.attr_dp), n=N_CYCLES)
 
         # define the population to be a list of individuals
         self.toolbox.register("population", tools.initRepeat, list, self.toolbox.individual)
@@ -57,12 +59,14 @@ class GeneticEngine:
         start = dt.now()
         # {260, 5}
         num_nuros = list(ind)[0]
-        num_epoch = list(ind)[1]
+        num_dp = list(ind)[1]
+        #num_dp=list(ind)[2]
 
         print("number of neuros :", num_nuros)
-        print("number of num_epoch :", num_epoch)
-        fit_val = self.model.evaluate(num_nuros, num_epoch)
+       # print("number of num_epoch :", num_epoch)
+        fit_val = self.model.evaluate(num_nuros, num_dp)
         print(":::: [genetic] Evaluate individual. fitness value", fit_val, "Duration", dt.now() - start, "::::\n")
+        print(ind)
         return fit_val, None
 
     def mutate_ind(self, ind, mu=0, sigma=4, chance_mutation=0.4):
@@ -120,7 +124,8 @@ class GeneticEngine:
         stats.register("std", numpy.std, axis=0)
         stats.register("min", numpy.min, axis=0)
         stats.register("max", numpy.max, axis=0)
-        algorithms.eaMuPlusLambda(pop, self.toolbox, MU, LAMBDA, CXPB, MUTPB, NGEN, stats, halloffame=hof)
+        #algorithms.eaMuPlusLambda(pop, self.toolbox, MU, LAMBDA, CXPB, MUTPB, NGEN, stats, halloffame=hof)
+        algorithms.eaSimple(pop, self.toolbox, cxpb=0, mutpb=0, ngen=2, halloffame=hof)
         print("The best individual is :", hof[-1])
         # print("The best fitness is :", eval_ind(self, hof[-1]))
         return hof[-1]
