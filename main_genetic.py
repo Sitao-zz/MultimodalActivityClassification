@@ -3,12 +3,12 @@
 #       Flow of the training process        #
 #                                           #
 #############################################
-from genetic_lstm.genetic import GeneticEngine
 from datetime import datetime as dt
-import common.dataprep_iner as cd
+from genetic_lstm.genetic import GeneticEngine
+from common.dataprep_iner import definitions
 
 start = dt.now()
-X_train, X_test, Y_train, Y_test, numClass = cd.definitions()
+X_train, X_test, Y_train, Y_test, numClass = definitions()
 
 print("::::: [main] Load data ", dt.now() - start, ":::::")
 

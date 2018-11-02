@@ -1,9 +1,9 @@
 from matplotlib import pyplot as plt
 
-import common.dataprep_iner as cd
+from common.dataprep_iner import definitions
 from models.lstm_simple import create_lstm_simple
 
-X_train, X_test, Y_train, Y_test, numClass = cd.definitions()
+X_train, X_test, Y_train, Y_test, numClass = definitions()
 
 from keras.callbacks import EarlyStopping
 
