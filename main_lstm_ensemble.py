@@ -7,11 +7,12 @@ Created on Sun Nov  5 22:14:10 2017
 
 import os
 import sys
-from keras.callbacks import EarlyStopping
-from models.lstm_ensemble import create_lstm_ensemble
+
 import numpy as np
+from keras.callbacks import EarlyStopping
 
 from common.dataprep import definitions, get_dataset
+from models.lstm_ensemble import create_lstm_ensemble
 
 np.random.seed(1337)
 

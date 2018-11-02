@@ -4,10 +4,10 @@ from keras.layers import LSTM
 from keras.models import Sequential
 
 
-def create_lstm_simple(num_class, num_neuros, num_dp):
+def create_lstm_simple(input_shape, num_class, num_neuros, num_dp):
     np.random.seed(7)
     model = Sequential()
-    model.add(LSTM(num_neuros, return_sequences=True, input_shape=(326, 6),
+    model.add(LSTM(num_neuros, return_sequences=True, input_shape=input_shape,
                    dropout=0.3, recurrent_dropout=0.3))
     model.add(Flatten())
     model.add(Dense(512, activation='relu'))

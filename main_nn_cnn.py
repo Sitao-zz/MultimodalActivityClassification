@@ -82,13 +82,9 @@ print("iner average accuracy: " + str(avg_val_acc_iner / 5))
 
 print("\n\nEvaluation Summary")
 for i in range(5):
-    X_train_iner = trainX_iner[i]
-    y_train_iner = trainY_iner[i]
     X_test_iner = testX_iner[i]
     y_test_iner = testY_iner[i]
 
-    X_train_ske = trainX_ske[i]
-    y_train_ske = trainY_ske[i]
     X_test_ske = testX_ske[i]
     y_test_ske = testY_ske[i]
 

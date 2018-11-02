@@ -12,7 +12,8 @@ class Model:
         self.numClass = numClass
 
     def evaluate(self, num_neuros, num_dp):
-        model = create_lstm_simple(self.numClass, num_neuros, num_dp)
+        input_shape = (326, 6)
+        model = create_lstm_simple(input_shape, self.numClass, num_neuros, num_dp)
         model.fit(self.X_train, self.Y_train,
                   callbacks=[EarlyStopping(monitor='acc', patience=10, verbose=0, mode='auto')],
                   epochs=50, batch_size=100)
