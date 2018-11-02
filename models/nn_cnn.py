@@ -11,7 +11,7 @@ def create_cnn(model_input, num_classes):
     :param num_classes:
     :return:
     """
-    x = Conv1D(32, kernel_size=3, activation='relu', padding="same",
+    x = Conv1D(56, kernel_size=3, activation='relu', padding="same",
                kernel_initializer='he_normal')(model_input)
     x = Conv1D(filters=64, kernel_size=1, padding="same", activation='relu')(x)
     x = MaxPooling1D(pool_size=2)(x)
