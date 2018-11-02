@@ -32,8 +32,8 @@ class GeneticEngine:
 
         self.toolbox = base.Toolbox()
 
-        INT_MIN, INT_MAX = 100, 1000
-        FLT_MIN, FLT_MAX = 5, 100
+        INT_MIN, INT_MAX = 100, 400
+        FLT_MIN, FLT_MAX = 5, 50
         N_CYCLES = 4
 
         self.toolbox.register("attr_int", random.randint, INT_MIN, INT_MAX)
@@ -58,7 +58,7 @@ class GeneticEngine:
 
         self.toolbox.register("evaluate", self.eval_ind)
         self.toolbox.register("mate", self.cx_ind)
-        self.toolbox.register("mutate", self.mutate_ind)
+        #self.toolbox.register("mutate", self.mutate_ind)
         self.toolbox.register("select", tools.selNSGA2)
 
     @property
@@ -129,7 +129,7 @@ class GeneticEngine:
         NGEN = 50
         MU = 20
         LAMBDA = 100
-        CXPB = 0.7
+        CXPB = 0
         MUTPB = 0.2
 
         pop = self.toolbox.population(n=MU)
@@ -139,7 +139,8 @@ class GeneticEngine:
         stats.register("std", numpy.std, axis=0)
         stats.register("min", numpy.min, axis=0)
         stats.register("max", numpy.max, axis=0)
-        algorithms.eaMuPlusLambda(pop, self.toolbox, MU, LAMBDA, CXPB, MUTPB, NGEN, stats, halloffame=hof)
+        #algorithms.eaMuPlusLambda(pop, self.toolbox, MU, LAMBDA, CXPB, MUTPB, NGEN, stats, halloffame=hof)
+        algorithms.eaSimple(pop,  self.toolbox, cxpb=0,mutpb=0, ngen=2, halloffame=hof)
         print("The best individual is :", hof[-1])
         print(len(pop))
         print(len(hof))
