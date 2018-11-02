@@ -113,7 +113,7 @@ for i in range(5):
 
 # %%
 from models.nn_mlpc import create_mlpc
-from utils import compile_and_train_early_strop, visualize_history
+from common.utils import compile_and_train_early_stop, visualize_history
 
 batch_size = 32
 epochs = 200
@@ -140,11 +140,11 @@ for i in range(5):
     X_test_ske = testX_skeleton[i]
     y_test_ske = testY_skeleton[i]
 
-    hist_iner = compile_and_train_early_strop(model_iner, X_train_iner, y_train_iner, X_test_iner, y_test_iner,
-                                              batch_size, num_epochs=epochs)
-
-    hist_ske = compile_and_train_early_strop(model_ske, X_train_ske, y_train_ske, X_test_ske, y_test_ske,
+    hist_iner = compile_and_train_early_stop(model_iner, X_train_iner, y_train_iner, X_test_iner, y_test_iner,
                                              batch_size, num_epochs=epochs)
+
+    hist_ske = compile_and_train_early_stop(model_ske, X_train_ske, y_train_ske, X_test_ske, y_test_ske,
+                                            batch_size, num_epochs=epochs)
 
     visualize_history(hist_iner, 'inertial_%d-' % i)
     visualize_history(hist_ske, 'skeleton_%d-' % i)

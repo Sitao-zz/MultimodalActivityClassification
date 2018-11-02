@@ -1,6 +1,5 @@
-import sys
 from tkinter import *
-import tkinter.ttk as ttk
+
 
 def set_Tk_var():
     global action
@@ -65,6 +64,7 @@ def destroy_window():
     top_level = None
 
 if __name__ == '__main__':
-    import depth_data_visualizer
+    from visualizer import depth_data_visualizer
+
     depth_data_visualizer.vp_start_gui()
 

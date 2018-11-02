@@ -1,12 +1,11 @@
-import sys
 import scipy.io
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-import tkinter.ttk as ttk
 from pathlib import Path
 from tkinter import *
 
-import depth_data_visualizer_support
+from visualizer import depth_data_visualizer_support
+
 
 def vp_start_gui():
     '''Starting point when module is the main routine.'''
