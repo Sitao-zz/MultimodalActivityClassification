@@ -1,4 +1,4 @@
-from  model import Model
+from GA_LSTM.model import Model
 import random
 import numpy
 
@@ -10,6 +10,9 @@ from datetime import datetime as dt
 
 IND_INIT_SIZE = 2
 NBR_ITEMS = 200
+NN_MIN, NN_MAX = 100, 1000
+NE_MIN, NE_MAX = 5, 100
+N_CYCLES = 1
 
 
 class GeneticEngine:
@@ -21,44 +24,22 @@ class GeneticEngine:
         # dict initialization. It is also seeded in main().
         random.seed(64)
 
-        # # Create the item dictionary: item name is an integer, and value is
-        # # a weight.
-        # items = {}
-        # # Create random items and store them in the items' dictionary. (18 rule * 9)
-        # for i in range(NBR_ITEMS):
-        #     items[i] = i;
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
         creator.create("Individual", set, fitness=creator.FitnessMax)
 
         self.toolbox = base.Toolbox()
 
-        INT_MIN, INT_MAX = 100, 400
-        FLT_MIN, FLT_MAX = 5, 50
-        N_CYCLES = 4
-
-        self.toolbox.register("attr_int", random.randint, INT_MIN, INT_MAX)
-        self.toolbox.register("attr_flt", random.randint, FLT_MIN, FLT_MAX)
+        self.toolbox.register("attr_int", random.randint, NN_MIN, NN_MAX)
+        self.toolbox.register("attr_flt", random.randint, NE_MIN, NE_MAX)
         self.toolbox.register("individual", tools.initCycle, creator.Individual,
-                         (self.toolbox.attr_int, self.toolbox.attr_flt), n=1)
-
-
-        # Attribute generator
-        #       define 'attr_item' to be an attribute ('gene')
-        #       which corresponds to integers sampled uniformly
-        #       from the range [1,10] (i.e. 1 to 10 with equal probability)
-        #self.toolbox.register("attr_item", random.randrange, NBR_ITEMS)
-
-        # Structure initializers
-        #       define 'individual' to be an individual
-        #       consisting of 10 'attr_item' elements ('genes')
-        #self.toolbox.register("individual", tools.initRepeat, creator.Individual, self.toolbox.attr_item, IND_INIT_SIZE)
+                         (self.toolbox.attr_int, self.toolbox.attr_flt), n=N_CYCLES)
 
         # define the population to be a list of individuals
         self.toolbox.register("population", tools.initRepeat, list, self.toolbox.individual)
 
         self.toolbox.register("evaluate", self.eval_ind)
         self.toolbox.register("mate", self.cx_ind)
-        #self.toolbox.register("mutate", self.mutate_ind)
+        self.toolbox.register("mutate", self.mutate_ind)
         self.toolbox.register("select", tools.selNSGA2)
 
     @property
@@ -129,8 +110,8 @@ class GeneticEngine:
         NGEN = 50
         MU = 20
         LAMBDA = 100
-        CXPB = 0
-        MUTPB = 0.2
+        CXPB = 0.7
+        MUTPB = 0
 
         pop = self.toolbox.population(n=MU)
         hof = tools.ParetoFront()
@@ -139,10 +120,7 @@ class GeneticEngine:
         stats.register("std", numpy.std, axis=0)
         stats.register("min", numpy.min, axis=0)
         stats.register("max", numpy.max, axis=0)
-        #algorithms.eaMuPlusLambda(pop, self.toolbox, MU, LAMBDA, CXPB, MUTPB, NGEN, stats, halloffame=hof)
-        algorithms.eaSimple(pop,  self.toolbox, cxpb=0,mutpb=0, ngen=2, halloffame=hof)
+        algorithms.eaMuPlusLambda(pop, self.toolbox, MU, LAMBDA, CXPB, MUTPB, NGEN, stats, halloffame=hof)
         print("The best individual is :", hof[-1])
-        print(len(pop))
-        print(len(hof))
         # print("The best fitness is :", eval_ind(self, hof[-1]))
         return hof[-1]
