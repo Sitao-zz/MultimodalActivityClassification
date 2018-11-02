@@ -12,7 +12,7 @@ import numpy as np
 from keras.models import Input
 
 from common.dataprep import definitions, get_dataset
-from models.nn_mlpc import create_mlpc
+from models.nn_cnn import create_cnn
 from common.utils import compile_and_train_early_stop, visualize_history, evaluate_accuracy
 
 np.random.seed(1337)
@@ -34,10 +34,10 @@ batch_size = 32
 epochs = 200
 num_classes = 28
 model_input_iner = Input(shape=(107, 6))
-model_iner = create_mlpc(model_input_iner, num_classes)
+model_iner = create_cnn(model_input_iner, num_classes)
 
 model_input_ske = Input(shape=(41, 60))
-model_ske = create_mlpc(model_input_ske, num_classes)
+model_ske = create_cnn(model_input_ske, num_classes)
 
 """
 Model training and evaluation
