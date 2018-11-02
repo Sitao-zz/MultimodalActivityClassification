@@ -3,12 +3,8 @@ import pandas as pd
 import scipy.io
 import numpy as np
 import pandas as pd
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import LSTM
 from keras.preprocessing import sequence
 from pathlib import Path
-from matplotlib import pyplot as plt
 from keras.utils import to_categorical
 import matplotlib
 matplotlib.use('AGG')
@@ -20,7 +16,7 @@ from sklearn.model_selection import train_test_split
 def definitions():
 
     def import_depth_data(action, subject, trial):
-        filename = f'dataset/Depth/a{action}_s{subject}_t{trial}_depth.mat'
+        filename = f'../dataset/Depth/a{action}_s{subject}_t{trial}_depth.mat'
         if Path(filename).is_file():
             mat = scipy.io.loadmat(filename)
             return mat['d_depth']
@@ -45,7 +41,7 @@ def definitions():
         return df
 
     def import_inertial_data(action, subject, trial):
-        filename = f'dataset/Inertial/a{action}_s{subject}_t{trial}_inertial.mat'
+        filename = f'../dataset/Inertial/a{action}_s{subject}_t{trial}_inertial.mat'
         if Path(filename).is_file():
             mat = scipy.io.loadmat(filename)
             return mat['d_iner']
