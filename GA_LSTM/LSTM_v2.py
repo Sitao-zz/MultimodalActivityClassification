@@ -10,6 +10,7 @@ from matplotlib import pyplot as plt
 from keras.utils import to_categorical
 from keras.layers import Dense, Flatten, Dropout
 
+
 def import_depth_data(action, subject, trial):
     filename = f'../dataset/Depth/a{action}_s{subject}_t{trial}_depth.mat'
     if Path(filename).is_file():
@@ -17,6 +18,7 @@ def import_depth_data(action, subject, trial):
         return mat['d_depth']
     else:
         return None
+
 
 def transform_depth_data(action, subject, trial):
     rows = []
@@ -28,6 +30,7 @@ def transform_depth_data(action, subject, trial):
     result = np.insert(rows, 0, [[action], [subject], [trial], [frame]], axis=1)
     return np.array(result)
 
+
 def transform_depth_data_to_df(action, subject, trial):
     data = transform_depth_data(action, subject, trial)
     if data is None: return None
@@ -35,16 +38,18 @@ def transform_depth_data_to_df(action, subject, trial):
     df.columns = ['action', 'subject', 'trial', 'frame'] + [f'depth_{n}' for n in range(240 * 320)]
     return df
 
+
 def export_depth_data_to_csv(action, subject, trial):
     df = transform_depth_data_to_df(action, subject, trial)
     if df is None: return None
     filename = f'a{action}_s{subject}_t{trial}_depth.csv'
     df.to_csv(filename, index=False)
 
+
 def show_depth_image(action, subject, trial, frame):
     data = import_depth_data(action, subject, trial)
     if data is None: return None
-    plt.imshow(data[:,:,frame], cmap='gray')
+    plt.imshow(data[:, :, frame], cmap='gray')
     plt.axis('off')
     plt.show()
 
@@ -80,6 +85,7 @@ def export_inertial_data_to_csv(action, subject, trial):
     filename = f'a{action}_s{subject}_t{trial}_inertial.csv'
     df.to_csv(filename, index=False)
 
+
 def import_skeleton_data(action, subject, trial):
     filename = f'../dataset/Skeleton/a{action}_s{subject}_t{trial}_skeleton.mat'
     if Path(filename).is_file():
@@ -88,19 +94,21 @@ def import_skeleton_data(action, subject, trial):
     else:
         return None
 
+
 def transform_skeleton_data(action, subject, trial):
     matrices = []
     data = import_skeleton_data(action, subject, trial)
     if data is None: return None
     for frame in range(data.shape[2]):
         skelecton_joints = [i + 1 for i in range(20)]
-        matrix = data[:,:,frame]
+        matrix = data[:, :, frame]
         matrix = np.insert(matrix, 0, skelecton_joints, axis=1)
         matrix = np.insert(matrix, 0, frame, axis=1)
         matrices.append(matrix)
     result = np.vstack(tuple(matrices))
     result = np.insert(result, 0, [[action], [subject], [trial]], axis=1)
     return result
+
 
 def transform_skeleton_data_to_df(action, subject, trial):
     data = transform_skeleton_data(action, subject, trial)
@@ -109,11 +117,13 @@ def transform_skeleton_data_to_df(action, subject, trial):
     df.columns = ['action', 'subject', 'trial', 'frame', 'skeleton_joint', 'x', 'y', 'z']
     return df
 
+
 def export_inertial_data_to_csv(action, subject, trial):
     df = transform_skeleton_data_to_df(action, subject, trial)
     if df is None: return None
     filename = f'a{action}_s{subject}_t{trial}_skeleton.csv'
     df.to_csv(filename, index=False)
+
 
 df = transform_depth_data_to_df(1, 1, 1)
 df.head()
@@ -124,7 +134,7 @@ df.head()
 df = transform_skeleton_data_to_df(1, 1, 1)
 df.head()
 
-#show_depth_image(1, 1, 1, 1)
+# show_depth_image(1, 1, 1, 1)
 
 # Original inertial data has dimension (Number of sample) x 6
 # Swap the axes so the new dimension is 6 x (Number of sample)
@@ -141,7 +151,7 @@ Y_test = []
 #     3. right hand wave (wave)
 #     18. two hand push (push)
 #     22. jogging (jog)
-activities = [1,2 ,3, 4,5, 6, 18,19,20,21, 22,25,26,27]
+activities = [1, 2, 3, 4, 5, 6, 18, 19, 20, 21, 22, 25, 26, 27]
 
 for index, action in enumerate(activities):
     for subject in range(1, 9):
@@ -177,7 +187,6 @@ print('Y_train.shape:', Y_train.shape)
 print('X_test.shape:', X_test.shape)
 print('Y_test.shape:', Y_test.shape)
 
-
 # One hot encoding
 Y_train = to_categorical(Y_train, num_classes=len(activities))
 Y_test = to_categorical(Y_test, num_classes=len(activities))
@@ -193,7 +202,7 @@ from keras.callbacks import EarlyStopping
 np.random.seed(7)
 model = Sequential()
 model.add(LSTM(500, return_sequences=True, input_shape=(326, 6),
-                       dropout=0.3, recurrent_dropout=0.3))
+               dropout=0.3, recurrent_dropout=0.3))
 model.add(Flatten())
 model.add(Dense(512, activation='relu'))
 model.add(Dropout(0.01))
@@ -207,10 +216,10 @@ history = model.fit(X_train, Y_train, callbacks=[EarlyStopping(monitor='acc', pa
 
 # Evaluate model
 scores = model.evaluate(X_test, Y_test, verbose=0)
-print("Accuracy: %.2f%%" % (scores[1]*100))
-
+print("Accuracy: %.2f%%" % (scores[1] * 100))
 
 import seaborn as sns
+
 sns.set(style="darkgrid")
 plt.plot(history.history['acc'])
 plt.title('RNN LSTM - Activity Classification')
