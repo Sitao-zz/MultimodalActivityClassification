@@ -22,8 +22,8 @@ sys.path.append(ROOT_DIR + "/dataset")
 Data preparation
 """
 dataset, trainsets, validationsets = definitions()
-trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_ine, trainY_ine, testX_ine, testY_ine = get_dataset(trainsets,
-                                                                                                         validationsets)
+trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner = get_dataset(trainsets,
+                                                                                                             validationsets)
 
 """
 Model creation 
@@ -44,10 +44,10 @@ avg_mae_iner = 0
 avg_loss_iner = 0
 
 for i in range(5):
-    X_iner = trainX_ine[i]
+    X_iner = trainX_iner[i]
     X_ske = trainX_ske[i]
-    hist = model.fit([X_iner, X_ske], [trainY_ske[i], trainY_ine[i], trainY_ske[i]], validation_data=(
-        [testX_ine[i], testX_ske[i]], [testY_ske[i], testY_ske[i], testY_ske[i]]),
+    hist = model.fit([X_iner, X_ske], [trainY_ske[i], trainY_iner[i], trainY_ske[i]], validation_data=(
+        [testX_iner[i], testX_ske[i]], [testY_ske[i], testY_ske[i], testY_ske[i]]),
                      callbacks=[EarlyStopping(monitor='val_main_output_acc', patience=10, verbose=1, mode='auto')],
                      epochs=200)
     avg_mae += hist.history['val_main_output_mean_absolute_error'][-1]

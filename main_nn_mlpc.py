@@ -24,8 +24,8 @@ sys.path.append(ROOT_DIR + "/dataset")
 Data preparation
 """
 dataset, trainsets, validationsets = definitions()
-trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_ine, trainY_ine, testX_ine, testY_ine = get_dataset(trainsets,
-                                                                                                         validationsets)
+trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner = get_dataset(trainsets,
+                                                                                                             validationsets)
 
 """
 Model configuration
@@ -42,16 +42,17 @@ model_ske = create_mlpc(model_input_ske, num_classes)
 """
 Model training and evaluation
 """
+VISUALIZATION = False
 avg_val_acc_ske = 0
 avg_loss_ske = 0
 avg_val_acc_iner = 0
 avg_loss_iner = 0
 
 for i in range(5):
-    X_train_iner = trainX_ine[i]
-    y_train_iner = trainY_ine[i]
-    X_test_iner = testX_ine[i]
-    y_test_iner = testY_ine[i]
+    X_train_iner = trainX_iner[i]
+    y_train_iner = trainY_iner[i]
+    X_test_iner = testX_iner[i]
+    y_test_iner = testY_iner[i]
 
     X_train_ske = trainX_ske[i]
     y_train_ske = trainY_ske[i]
@@ -64,8 +65,9 @@ for i in range(5):
     hist_ske = compile_and_train_early_stop(model_ske, X_train_ske, y_train_ske, X_test_ske, y_test_ske,
                                             batch_size, num_epochs=epochs)
 
-    visualize_history(hist_iner, 'inertial_%d-' % i)
-    visualize_history(hist_ske, 'skeleton_%d-' % i)
+    if VISUALIZATION:
+        visualize_history(hist_iner, 'inertial_%d-' % i, plot_loss=False)
+        visualize_history(hist_ske, 'skeleton_%d-' % i, plot_loss=False)
 
     avg_loss_ske += hist_ske.history['val_loss'][-1]
     avg_val_acc_ske += hist_ske.history['val_acc'][-1]

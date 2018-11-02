@@ -26,7 +26,7 @@ def evaluate_accuracy(model, X_test, y_test):
     return score[1]
 
 
-def visualize_history(history, prefix=''):
+def visualize_history(history, prefix='', plot_loss=False):
     accuracy = history.history['acc']
     val_accuracy = history.history['val_acc']
     loss = history.history['loss']
@@ -36,9 +36,10 @@ def visualize_history(history, prefix=''):
     plt.plot(epochs, val_accuracy, 'b', label='Validation accuracy')
     plt.title(prefix + 'Training and validation accuracy')
     plt.legend()
-    plt.figure()
-    plt.plot(epochs, loss, 'bo', label='Training loss')
-    plt.plot(epochs, val_loss, 'b', label='Validation loss')
-    plt.title(prefix + 'Training and validation loss')
-    plt.legend()
+    if plot_loss:
+        plt.figure()
+        plt.plot(epochs, loss, 'bo', label='Training loss')
+        plt.plot(epochs, val_loss, 'b', label='Validation loss')
+        plt.title(prefix + 'Training and validation loss')
+        plt.legend()
     plt.show()

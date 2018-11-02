@@ -54,10 +54,10 @@ def get_dataset(trainsets, validationsets):
     trainY_ske = [[], [], [], [], []]
     testX_ske = [[], [], [], [], []]
     testY_ske = [[], [], [], [], []]
-    trainX_ine = [[], [], [], [], []]
-    trainY_ine = [[], [], [], [], []]
-    testX_ine = [[], [], [], [], []]
-    testY_ine = [[], [], [], [], []]
+    trainX_iner = [[], [], [], [], []]
+    trainY_iner = [[], [], [], [], []]
+    testX_iner = [[], [], [], [], []]
+    testY_iner = [[], [], [], [], []]
     for i in range(5):
         for j in trainsets[i]:
             dic_mat_inertial = scio.loadmat("dataset/Inertial/" + j + "_inertial.mat")
@@ -76,8 +76,8 @@ def get_dataset(trainsets, validationsets):
 
             inputdata_inertial = pre_processing_inertial(data_inertial)
             inputdata_inertial = np.ndarray.tolist(inputdata_inertial)
-            trainX_ine[i].append(inputdata_inertial)
-            trainY_ine[i].append(int(j.split('_')[0][1:]))
+            trainX_iner[i].append(inputdata_inertial)
+            trainY_iner[i].append(int(j.split('_')[0][1:]))
 
         for j in validationsets[i]:
             dic_mat_inertial = scio.loadmat("dataset/Inertial/" + j + "_inertial.mat")
@@ -96,8 +96,8 @@ def get_dataset(trainsets, validationsets):
 
             inputdata_inertial = pre_processing_inertial(data_inertial)
             inputdata_inertial = np.ndarray.tolist(inputdata_inertial)
-            testX_ine[i].append(inputdata_inertial)
-            testY_ine[i].append(int(j.split('_')[0][1:]))
+            testX_iner[i].append(inputdata_inertial)
+            testY_iner[i].append(int(j.split('_')[0][1:]))
     # %%
     label_binarizer = sklearn.preprocessing.LabelBinarizer()
     label_binarizer.fit(range(28))
@@ -107,8 +107,8 @@ def get_dataset(trainsets, validationsets):
         trainY_ske[i] = label_binarizer.transform(trainY_ske[i])
         testY_ske[i] = label_binarizer.transform(testY_ske[i])
 
-        trainX_ine[i] = np.array(trainX_ine[i])
-        testX_ine[i] = np.array(testX_ine[i])
-        trainY_ine[i] = label_binarizer.transform(trainY_ine[i])
-        testY_ine[i] = label_binarizer.transform(testY_ine[i])
-        return trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_ine, trainY_ine, testX_ine, testY_ine
+        trainX_iner[i] = np.array(trainX_iner[i])
+        testX_iner[i] = np.array(testX_iner[i])
+        trainY_iner[i] = label_binarizer.transform(trainY_iner[i])
+        testY_iner[i] = label_binarizer.transform(testY_iner[i])
+    return trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner
