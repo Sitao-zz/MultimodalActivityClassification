@@ -6,16 +6,12 @@ Created on Sun Nov  5 22:14:10 2017
 """
 
 import os
-import scipy.io as scio
+
 import numpy as np
 import pandas as pd
+import scipy.io as scio
 
 np.random.seed(1337)
-
-import keras.utils
-from keras.models import Sequential, Model
-from keras.layers import Activation, Dense, LSTM, Input, Concatenate, Flatten
-from keras.optimizers import Adam
 
 # %%
 import sys
@@ -115,28 +111,8 @@ for i in range(5):
     testY_inertial[i] = label_binarizer.transform(testY_inertial[i])
 
 # %%
-inertial_input = Input(shape=(107, 6), name="iner_lstm_input")
-iner_lstm_1 = LSTM(50, input_shape=(107, 6), return_sequences=True)(inertial_input)
-iner_lstm_out = LSTM(100, return_sequences=False)(iner_lstm_1)
-iner_dense = Dense(50)(iner_lstm_out)
-inertial_out = Dense(units=28, name="inertial_output")(iner_dense)
-
-skeleton_input = Input(shape=(41, 60), name="ske_lstm_input")
-ske_lstm_1 = LSTM(128, input_shape=(41, 60), return_sequences=True)(skeleton_input)
-ske_lstm_out = LSTM(256, return_sequences=False)(ske_lstm_1)
-ske_dense = Dense(128)(ske_lstm_out)
-skeleton_out = Dense(units=28, name="skeleton_output")(ske_dense)
-
-merge = keras.layers.concatenate([iner_lstm_out, ske_lstm_out])
-
-dense_1 = Dense(128, activation='relu')(merge)
-# dense_2 = Dense(128, activation = 'relu')(dense_1)
-main_output = Dense(units=28, activation='softmax', name='main_output')(dense_1)
-
-model = Model(inputs=[inertial_input, skeleton_input], outputs=[main_output, inertial_out, skeleton_out])
-model.compile(loss='mse', optimizer='rmsprop', metrics=['mae', 'acc'])
-
-print(model.summary())
+from models.lstm_ensemble import create_lstm_ensemble
+model = create_lstm_ensemble()
 
 # %%
 from keras.callbacks import EarlyStopping
@@ -155,7 +131,7 @@ for i in range(5):
     X_iner = trainX_inertial[i]
     X_ske = trainX_skeleton[i]
     hist = model.fit([X_iner, X_ske], [trainY_skeleton[i], trainY_inertial[i], trainY_skeleton[i]], validation_data=(
-    [testX_inertial[i], testX_skeleton[i]], [testY_skeleton[i], testY_skeleton[i], testY_skeleton[i]]),
+        [testX_inertial[i], testX_skeleton[i]], [testY_skeleton[i], testY_skeleton[i], testY_skeleton[i]]),
                      callbacks=[EarlyStopping(monitor='val_main_output_acc', patience=10, verbose=1, mode='auto')],
                      epochs=200)
     avg_mae += hist.history['val_main_output_mean_absolute_error'][-1]

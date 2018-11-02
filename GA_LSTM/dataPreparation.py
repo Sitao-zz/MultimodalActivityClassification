@@ -7,16 +7,16 @@ from keras.preprocessing import sequence
 from pathlib import Path
 from keras.utils import to_categorical
 import matplotlib
+
 matplotlib.use('AGG')
 import numpy as np
 
-
 from sklearn.model_selection import train_test_split
 
-def definitions():
 
+def definitions():
     def import_depth_data(action, subject, trial):
-        filename = f'../dataset/Depth/a{action}_s{subject}_t{trial}_depth.mat'
+        filename = f'dataset/Depth/a{action}_s{subject}_t{trial}_depth.mat'
         if Path(filename).is_file():
             mat = scipy.io.loadmat(filename)
             return mat['d_depth']
@@ -41,7 +41,7 @@ def definitions():
         return df
 
     def import_inertial_data(action, subject, trial):
-        filename = f'../dataset/Inertial/a{action}_s{subject}_t{trial}_inertial.mat'
+        filename = f'dataset/Inertial/a{action}_s{subject}_t{trial}_inertial.mat'
         if Path(filename).is_file():
             mat = scipy.io.loadmat(filename)
             return mat['d_iner']
@@ -121,4 +121,4 @@ def definitions():
     print('Y_train.shape:', Y_train.shape)
     print('X_test.shape:', X_test.shape)
     print('Y_test.shape:', Y_test.shape)
-    return X_train, X_test, Y_train ,Y_test
+    return X_train, X_test, Y_train, Y_test
