@@ -8,10 +8,9 @@ from deap import base
 from deap import algorithms
 from datetime import datetime as dt
 
-IND_INIT_SIZE = 2
-NBR_ITEMS = 200
+IND_INIT_SIZE = 10
+NBR_ITEMS = 2
 NN_MIN, NN_MAX = 100, 600
-#NE_MIN, NE_MAX = 5, 100
 Dp_MIN,Dp_MAX = 0.01, 0.5
 N_CYCLES = 1
 
@@ -111,12 +110,8 @@ class GeneticEngine:
         :return: the best individual Chromosome
         """
         random.seed(64)
-        NGEN = 50
-        MU = 20
-        LAMBDA = 100
-        CXPB = 0.7
-        MUTPB = 0
-
+        NGEN = 10
+        MU = 10
         pop = self.toolbox.population(n=MU)
         hof = tools.ParetoFront()
         stats = tools.Statistics(lambda ind: ind.fitness.values)
@@ -125,7 +120,7 @@ class GeneticEngine:
         stats.register("min", numpy.min, axis=0)
         stats.register("max", numpy.max, axis=0)
         #algorithms.eaMuPlusLambda(pop, self.toolbox, MU, LAMBDA, CXPB, MUTPB, NGEN, stats, halloffame=hof)
-        algorithms.eaSimple(pop, self.toolbox, cxpb=0, mutpb=0, ngen=2, halloffame=hof)
+        algorithms.eaSimple(pop, self.toolbox, cxpb=0.6, mutpb=0.05, ngen=NGEN, halloffame=hof)
         print("The best individual is :", hof[-1])
         # print("The best fitness is :", eval_ind(self, hof[-1]))
         return hof[-1]

@@ -151,7 +151,7 @@ Y_test = []
 #     3. right hand wave (wave)
 #     18. two hand push (push)
 #     22. jogging (jog)
-activities = [1, 2, 3, 4, 5, 6, 18, 19, 20, 21, 22, 25, 26, 27]
+activities = [1, 2, 3, 4, 5, 6,7,8,9,10,11,12,13,14,15,16,17, 18, 19, 20, 21, 22,23,24, 25, 26, 27]
 
 for index, action in enumerate(activities):
     for subject in range(1, 9):
