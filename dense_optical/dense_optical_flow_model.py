@@ -1,7 +1,7 @@
 from keras.callbacks import TensorBoard, ModelCheckpoint, EarlyStopping, CSVLogger
 from keras.utils import np_utils
 from sklearn.metrics import classification_report, f1_score, precision_score, recall_score
-from dataprep import definitions
+from common.dataprep import definitions
 from models.modeldef import ResearchModels
 import pandas as pd
 import numpy as np

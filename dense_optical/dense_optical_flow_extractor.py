@@ -1,10 +1,8 @@
 import numpy as np
-import pandas as pd
 import scipy.io as sio
 import cv2
-import random
 import pickle as pk
-from dataprep import definitions
+from common.dataprep import definitions
 
 dataset, trainsets, validationsets = definitions()
 depth_dataset = {i: {'depth': sio.loadmat('dataset/Depth/' + i + '_depth.mat')['d_depth']} for i in dataset}

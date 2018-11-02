@@ -2,8 +2,7 @@ import scipy.io as sio
 import pandas as pd
 import numpy as np
 import pickle as pk
-import matplotlib.pyplot as plt
-from dataprep import definitions
+from common.dataprep import definitions
 
 dataset, trainsets, validationsets = definitions()
 
