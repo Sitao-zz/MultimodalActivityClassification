@@ -28,5 +28,6 @@ def create_cnn(model_input, num_classes):
     x = LeakyReLU()(x)
     x = Dense(num_classes, activation='softmax')(x)
     model = Model(model_input, x, name='cnn')
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     print(model.summary())
     return model

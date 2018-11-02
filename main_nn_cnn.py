@@ -13,7 +13,7 @@ from keras.models import Input
 
 from common.dataprep import definitions, get_dataset
 from models.nn_cnn import create_cnn
-from common.utils import compile_and_train_early_stop, visualize_history, evaluate_accuracy
+from common.utils import model_train_early_stop, visualize_history, evaluate_accuracy
 
 np.random.seed(1337)
 
@@ -59,11 +59,11 @@ for i in range(5):
     X_test_ske = testX_ske[i]
     y_test_ske = testY_ske[i]
 
-    hist_iner = compile_and_train_early_stop(model_iner, X_train_iner, y_train_iner, X_test_iner, y_test_iner,
-                                             batch_size, num_epochs=epochs)
+    hist_iner = model_train_early_stop(model_iner, X_train_iner, y_train_iner, X_test_iner, y_test_iner,
+                                       batch_size, num_epochs=epochs)
 
-    hist_ske = compile_and_train_early_stop(model_ske, X_train_ske, y_train_ske, X_test_ske, y_test_ske,
-                                            batch_size, num_epochs=epochs)
+    hist_ske = model_train_early_stop(model_ske, X_train_ske, y_train_ske, X_test_ske, y_test_ske,
+                                      batch_size, num_epochs=epochs)
 
     if VISUALIZATION:
         visualize_history(hist_iner, 'inertial_%d-' % i, plot_loss=False)

@@ -16,5 +16,6 @@ def create_mlpc(model_input, num_classes):
     x = Dropout(0.3)(x)
     x = Dense(num_classes, activation='softmax')(x)
     model = Model(model_input, x, name='mplc')
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     print(model.summary())
     return model
