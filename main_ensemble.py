@@ -12,7 +12,7 @@ import numpy as np
 from keras.callbacks import EarlyStopping
 
 from common.dataprep import definitions, get_dataset
-from models.ensemble_lstm import create_lstm_ensemble
+from models.ensemble_lstm_cnn import create_lstm_cnn_ensemble
 
 np.random.seed(1337)
 
@@ -32,7 +32,7 @@ Model creation
 num_classes = 28
 input_shape_iner = (107, 6)
 input_shape_ske = (41, 60)
-model = create_lstm_ensemble(input_shape_iner, input_shape_ske, num_classes)
+model = create_lstm_cnn_ensemble(input_shape_iner, input_shape_ske, num_classes)
 
 """
 Model training and evaluation

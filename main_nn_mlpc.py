@@ -9,7 +9,6 @@ import os
 import sys
 
 import numpy as np
-from keras.models import Input
 
 from common.dataprep import definitions, get_dataset
 from models.nn_mlpc import create_mlpc
@@ -33,11 +32,11 @@ Model configuration
 batch_size = 32
 epochs = 200
 num_classes = 28
-model_input_iner = Input(shape=(107, 6))
-model_iner = create_mlpc(model_input_iner, num_classes)
+input_shape_iner = (107, 6)
+model_iner = create_mlpc(input_shape_iner, num_classes)
 
-model_input_ske = Input(shape=(41, 60))
-model_ske = create_mlpc(model_input_ske, num_classes)
+input_shape_ske = (41, 60)
+model_ske = create_mlpc(input_shape_ske, num_classes)
 
 """
 Model training and evaluation

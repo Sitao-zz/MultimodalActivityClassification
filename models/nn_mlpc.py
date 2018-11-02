@@ -1,8 +1,8 @@
 from keras.layers import Dense, Dropout, Flatten
-from keras.models import Model
+from keras.models import Model, Input
 
 
-def create_mlpc(model_input, num_classes):
+def create_mlpc(input_shape, num_classes):
     """
     define mlpc model
 
@@ -10,12 +10,18 @@ def create_mlpc(model_input, num_classes):
     :param num_classes:
     :return:
     """
-    x = Dense(128, activation='relu')(model_input)
-    x = Flatten()(x)
-    x = Dense(128, activation='relu')(x)
-    x = Dropout(0.3)(x)
-    x = Dense(num_classes, activation='softmax')(x)
+    model_input = Input(shape=input_shape)
+    mlpc_out, x = create_mlpc_layers(model_input, num_classes)
     model = Model(model_input, x, name='mplc')
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     print(model.summary())
     return model
+
+
+def create_mlpc_layers(model_input, num_classes, out_name=''):
+    x = Dense(128, activation='relu')(model_input)
+    x = Flatten()(x)
+    x = Dense(128, activation='relu')(x)
+    mlpc_out = Dropout(0.3)(x)
+    x = Dense(num_classes, activation='softmax', name=out_name)(mlpc_out)
+    return mlpc_out, x
