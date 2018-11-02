@@ -81,7 +81,7 @@ def export_inertial_data_to_csv(action, subject, trial):
     df.to_csv(filename, index=False)
 
 def import_skeleton_data(action, subject, trial):
-    filename = f'dataset/Skeleton/a{action}_s{subject}_t{trial}_skeleton.mat'
+    filename = f'../dataset/Skeleton/a{action}_s{subject}_t{trial}_skeleton.mat'
     if Path(filename).is_file():
         mat = scipy.io.loadmat(filename)
         return mat['d_skel']
@@ -124,7 +124,7 @@ df.head()
 df = transform_skeleton_data_to_df(1, 1, 1)
 df.head()
 
-show_depth_image(1, 1, 1, 1)
+#show_depth_image(1, 1, 1, 1)
 
 # Original inertial data has dimension (Number of sample) x 6
 # Swap the axes so the new dimension is 6 x (Number of sample)
