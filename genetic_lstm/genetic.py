@@ -1,4 +1,4 @@
-from GA_LSTM.model import Model
+from genetic_lstm.model import Model
 import random
 import numpy
 
@@ -11,14 +11,14 @@ from datetime import datetime as dt
 IND_INIT_SIZE = 10
 NBR_ITEMS = 2
 NN_MIN, NN_MAX = 100, 600
-Dp_MIN,Dp_MAX = 0.01, 0.5
+Dp_MIN, Dp_MAX = 0.01, 0.5
 N_CYCLES = 1
 
 
 class GeneticEngine:
 
-    def __init__(self, X_train, Y_train, X_test, Y_test,numClass):
-        self.model = Model(X_train, Y_train, X_test, Y_test,numClass)
+    def __init__(self, X_train, Y_train, X_test, Y_test, numClass):
+        self.model = Model(X_train, Y_train, X_test, Y_test, numClass)
 
         # To assure reproductibility, the RNG seed is set prior to the items
         # dict initialization. It is also seeded in main().
@@ -30,8 +30,8 @@ class GeneticEngine:
         self.toolbox = base.Toolbox()
 
         self.toolbox.register("attr_nn", random.randint, NN_MIN, NN_MAX)
-        #self.toolbox.register("attr_ne", random.randint, NE_MIN, NE_MAX)
-        self.toolbox.register("attr_dp",random.uniform,Dp_MIN,Dp_MAX)
+        # self.toolbox.register("attr_ne", random.randint, NE_MIN, NE_MAX)
+        self.toolbox.register("attr_dp", random.uniform, Dp_MIN, Dp_MAX)
         self.toolbox.register("individual", tools.initCycle, creator.Individual,
                               (self.toolbox.attr_nn, self.toolbox.attr_dp), n=N_CYCLES)
 
@@ -59,10 +59,10 @@ class GeneticEngine:
         # {260, 5}
         num_nuros = list(ind)[0]
         num_dp = list(ind)[1]
-        #num_dp=list(ind)[2]
+        # num_dp=list(ind)[2]
 
         print("number of neuros :", num_nuros)
-       # print("number of num_epoch :", num_epoch)
+        # print("number of num_epoch :", num_epoch)
         fit_val = self.model.evaluate(num_nuros, num_dp)
         print(":::: [genetic] Evaluate individual. fitness value", fit_val, "Duration", dt.now() - start, "::::\n")
         print(ind)
@@ -119,7 +119,7 @@ class GeneticEngine:
         stats.register("std", numpy.std, axis=0)
         stats.register("min", numpy.min, axis=0)
         stats.register("max", numpy.max, axis=0)
-        #algorithms.eaMuPlusLambda(pop, self.toolbox, MU, LAMBDA, CXPB, MUTPB, NGEN, stats, halloffame=hof)
+        # algorithms.eaMuPlusLambda(pop, self.toolbox, MU, LAMBDA, CXPB, MUTPB, NGEN, stats, halloffame=hof)
         algorithms.eaSimple(pop, self.toolbox, cxpb=0.6, mutpb=0.05, ngen=NGEN, halloffame=hof)
         print("The best individual is :", hof[-1])
         # print("The best fitness is :", eval_ind(self, hof[-1]))

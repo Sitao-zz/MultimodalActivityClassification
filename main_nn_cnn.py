@@ -11,7 +11,7 @@ import sys
 import numpy as np
 
 from common.dataprep import definitions, get_dataset
-from models.nn_mlpc import create_mlpc
+from models.nn_cnn import create_cnn
 from common.utils import model_train_early_stop, visualize_history, evaluate_accuracy
 
 np.random.seed(1337)
@@ -33,10 +33,10 @@ batch_size = 32
 epochs = 200
 num_classes = 28
 input_shape_iner = (107, 6)
-model_iner = create_mlpc(input_shape_iner, num_classes)
+model_iner = create_cnn(input_shape_iner, num_classes)
 
 input_shape_ske = (41, 60)
-model_ske = create_mlpc(input_shape_ske, num_classes)
+model_ske = create_cnn(input_shape_ske, num_classes)
 
 """
 Model training and evaluation
@@ -81,13 +81,9 @@ print("iner average accuracy: " + str(avg_val_acc_iner / 5))
 
 print("\n\nEvaluation Summary")
 for i in range(5):
-    X_train_iner = trainX_iner[i]
-    y_train_iner = trainY_iner[i]
     X_test_iner = testX_iner[i]
     y_test_iner = testY_iner[i]
 
-    X_train_ske = trainX_ske[i]
-    y_train_ske = trainY_ske[i]
     X_test_ske = testX_ske[i]
     y_test_ske = testY_ske[i]
 

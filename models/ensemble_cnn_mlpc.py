@@ -13,5 +13,6 @@ def create_ensemble(models, model_input):
     outputs = [model.outputs[0] for model in models]
     y = Average()(outputs)
     model = Model(model_input, y, name='ensemble')
+    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     print(model.summary())
     return model

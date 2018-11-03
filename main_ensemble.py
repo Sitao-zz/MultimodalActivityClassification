@@ -12,7 +12,9 @@ import numpy as np
 from keras.callbacks import EarlyStopping
 
 from common.dataprep import definitions, get_dataset
-from models.ensemble_lstm import create_lstm_ensemble
+from models.ensemble_lstm_cnn import create_lstm_cnn_ensemble
+from common.utils import model_train_early_stop, evaluate_accuracy
+import matplotlib.pyplot as plt
 
 np.random.seed(1337)
 
@@ -30,9 +32,31 @@ trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_in
 Model creation 
 """
 num_classes = 28
+epochs = 200
 input_shape_iner = (107, 6)
 input_shape_ske = (41, 60)
-model = create_lstm_ensemble(input_shape_iner, input_shape_ske, num_classes)
+model = create_lstm_cnn_ensemble(input_shape_iner, input_shape_ske, num_classes)
+
+
+def visualize_history(history, prefix='', plot_loss=False, show=True):
+    accuracy = history.history['main_output_acc']
+    val_accuracy = history.history['val_main_output_acc']
+    loss = history.history['main_output_loss']
+    val_loss = history.history['val_main_output_loss']
+    epochs = range(len(accuracy))
+    plt.plot(epochs, accuracy, 'bo', label='Training accuracy')
+    plt.plot(epochs, val_accuracy, 'b', label='Validation accuracy')
+    plt.title(prefix + 'Training and validation accuracy')
+    plt.legend()
+    if plot_loss:
+        plt.figure()
+        plt.plot(epochs, loss, 'bo', label='Training loss')
+        plt.plot(epochs, val_loss, 'b', label='Validation loss')
+        plt.title(prefix + 'Training and validation loss')
+        plt.legend()
+    if show:
+        plt.show()
+
 
 """
 Model training and evaluation
@@ -46,6 +70,7 @@ avg_loss_ske = 0
 avg_val_acc_iner = 0
 avg_mae_iner = 0
 avg_loss_iner = 0
+hists = []
 
 for i in range(5):
     X_iner = trainX_iner[i]
@@ -53,7 +78,8 @@ for i in range(5):
     hist = model.fit([X_iner, X_ske], [trainY_ske[i], trainY_iner[i], trainY_ske[i]], validation_data=(
         [testX_iner[i], testX_ske[i]], [testY_ske[i], testY_ske[i], testY_ske[i]]),
                      callbacks=[EarlyStopping(monitor='val_main_output_acc', patience=10, verbose=1, mode='auto')],
-                     epochs=200)
+                     epochs=epochs)
+    hists.append(hist)
     avg_mae += hist.history['val_main_output_mean_absolute_error'][-1]
     avg_loss += hist.history['val_main_output_loss'][-1]
     avg_val_acc += hist.history['val_main_output_acc'][-1]
@@ -73,3 +99,12 @@ print("ske average accuracy: " + str(avg_val_acc_ske / 5))
 print("iner average mae: " + str(avg_mae_iner / 5))
 print("iner average loss: " + str(avg_loss_iner / 5))
 print("iner average accuracy: " + str(avg_val_acc_iner / 5))
+
+print("\n\nEvaluation Summary")
+for i in range(5):
+    hist = hists[i]
+    if i > 0:
+        plt.figure()
+    visualize_history(hist, 'skeleton_%d-' % i, show=False)
+
+plt.show()

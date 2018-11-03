@@ -1,19 +1,14 @@
 import matplotlib.pyplot as plt
-import numpy as np
-from keras.utils import to_categorical
-from sklearn.model_selection import train_test_split
 from keras.callbacks import EarlyStopping
 
 
-def compile_and_train(model, X_train, y_train, X_val, y_val, batch_size, num_epochs):
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+def model_train(model, X_train, y_train, X_val, y_val, batch_size, num_epochs):
     history = model.fit(x=X_train, y=y_train, batch_size=batch_size, epochs=num_epochs, verbose=0,
                         validation_data=(X_val, y_val))
     return history
 
 
-def compile_and_train_early_stop(model, X_train, y_train, X_val, y_val, batch_size, num_epochs):
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+def model_train_early_stop(model, X_train, y_train, X_val, y_val, batch_size, num_epochs):
     history = model.fit(x=X_train, y=y_train, batch_size=batch_size, epochs=num_epochs, verbose=0,
                         validation_data=(X_val, y_val),
                         callbacks=[EarlyStopping(monitor='val_acc', patience=10, verbose=0,
