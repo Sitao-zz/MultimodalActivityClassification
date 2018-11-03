@@ -201,18 +201,18 @@ from keras.callbacks import EarlyStopping
 # Create the model
 np.random.seed(7)
 model = Sequential()
-model.add(LSTM(500, return_sequences=True, input_shape=(326, 6),
+model.add(LSTM(200, return_sequences=True, input_shape=(326, 6),
                dropout=0.3, recurrent_dropout=0.3))
 model.add(Flatten())
 model.add(Dense(512, activation='relu'))
-model.add(Dropout(0.01))
+model.add(Dropout(0.053))
 model.add(Dense(len(activities), activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='sgd', metrics=['accuracy'])
 print(model.summary())
 
 # Train model
 history = model.fit(X_train, Y_train, callbacks=[EarlyStopping(monitor='acc', patience=10, verbose=1, mode='auto')],
-                    epochs=30, batch_size=100)
+                    epochs=50, batch_size=100)
 
 # Evaluate model
 scores = model.evaluate(X_test, Y_test, verbose=0)
