@@ -105,6 +105,6 @@ for i in range(5):
     hist = hists[i]
     if i > 0:
         plt.figure()
-    visualize_history(hist, 'skeleton_%d-' % i, show=False)
+    visualize_history(hist, 'multimodal_%d-' % i, show=False)
 
 plt.show()
