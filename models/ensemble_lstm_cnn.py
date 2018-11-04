@@ -18,7 +18,7 @@ def create_lstm_cnn_ensemble(input_shape_iner, input_shape_ske, num_classes):
     # dense_2 = Dense(128, activation = 'relu')(dense_1)
     main_output = Dense(units=num_classes, activation='softmax', name='main_output')(dense_1)
 
-    model = Model(inputs=[inertial_input, skeleton_input], outputs=[main_output, inertial_out, skeleton_out])
+    model = Model(inputs=[inertial_input, skeleton_input], outputs=main_output)
     model.compile(loss='mse', optimizer='rmsprop', metrics=['mae', 'acc'])
     print(model.summary())
     return model
