@@ -20,7 +20,7 @@ def create_cnn_lstm(input_shape_iner, num_classes):
 
 
 def create_cnn_lstm_layers(model_input, num_classes, out_name=''):
-    x = Conv1D(56, kernel_size=3, activation='relu', padding="same",
+    x = Conv1D(58, kernel_size=3, activation='relu', padding="same",
                kernel_initializer='he_normal')(model_input)
     x = MaxPooling1D(pool_size=2)(x)
     x = Dropout(0.5)(x)
