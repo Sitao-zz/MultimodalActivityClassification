@@ -20,6 +20,5 @@ def create_lstm_cnn_ensemble(input_shape_iner, input_shape_ske, num_classes):
 
     model = Model(inputs=[inertial_input, skeleton_input], outputs=main_output)
     model.compile(loss='mse', optimizer='rmsprop', metrics=['mae', 'acc'])
-    print(model.summary())
     return model
 

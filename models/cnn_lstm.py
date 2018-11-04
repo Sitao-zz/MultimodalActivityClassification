@@ -15,7 +15,6 @@ def create_cnn_lstm(input_shape_iner, num_classes):
     cnn_out, x = create_cnn_lstm_layers(model_input, num_classes)
     model = Model(model_input, x, name='cnn')
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    print(model.summary())
     return model
 
 

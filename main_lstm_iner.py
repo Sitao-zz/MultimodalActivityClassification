@@ -1,5 +1,5 @@
 from matplotlib import pyplot as plt
-from keras.models import Input
+
 from common.dataprep_iner import definitions
 from models.lstm_simple import create_lstm_simple
 
@@ -10,6 +10,7 @@ from keras.callbacks import EarlyStopping
 # Create the model
 input_shape = (326, 6)
 model = create_lstm_simple(input_shape, numClass, 500, 0.01)
+print(model.summary())
 
 # Train model
 history = model.fit(X_train, Y_train, callbacks=[EarlyStopping(monitor='acc', patience=10, verbose=1, mode='auto')],

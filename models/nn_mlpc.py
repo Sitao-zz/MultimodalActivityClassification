@@ -14,7 +14,6 @@ def create_mlpc(input_shape, num_classes):
     mlpc_out, x = create_mlpc_layers(model_input, num_classes)
     model = Model(model_input, x, name='mplc')
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-    print(model.summary())
     return model
 
 
