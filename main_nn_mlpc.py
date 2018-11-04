@@ -33,10 +33,7 @@ batch_size = 32
 epochs = 200
 num_classes = 28
 input_shape_iner = (107, 6)
-model_iner = create_mlpc(input_shape_iner, num_classes)
-
 input_shape_ske = (41, 60)
-model_ske = create_mlpc(input_shape_ske, num_classes)
 
 """
 Model training and evaluation
@@ -58,6 +55,9 @@ for i in range(5):
     X_test_ske = testX_ske[i]
     y_test_ske = testY_ske[i]
 
+    model_iner = create_mlpc(input_shape_iner, num_classes)
+    model_ske = create_mlpc(input_shape_ske, num_classes)
+
     hist_iner = model_train_early_stop(model_iner, X_train_iner, y_train_iner, X_test_iner, y_test_iner,
                                        batch_size, num_epochs=epochs)
 
@@ -78,21 +78,3 @@ print("ske average loss: " + str(avg_loss_ske / 5))
 print("ske average accuracy: " + str(avg_val_acc_ske / 5))
 print("iner average loss: " + str(avg_loss_iner / 5))
 print("iner average accuracy: " + str(avg_val_acc_iner / 5))
-
-print("\n\nEvaluation Summary")
-for i in range(5):
-    X_train_iner = trainX_iner[i]
-    y_train_iner = trainY_iner[i]
-    X_test_iner = testX_iner[i]
-    y_test_iner = testY_iner[i]
-
-    X_train_ske = trainX_ske[i]
-    y_train_ske = trainY_ske[i]
-    X_test_ske = testX_ske[i]
-    y_test_ske = testY_ske[i]
-
-    print("\nSubject index: " + str(i))
-    acc_iner = evaluate_accuracy(model_iner, X_test_iner, y_test_iner)
-    acc_ske = evaluate_accuracy(model_ske, X_test_ske, y_test_ske)
-    print("::iner accuracy: " + str(acc_iner))
-    print("::ske accuracy: " + str(acc_ske))

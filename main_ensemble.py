@@ -35,7 +35,6 @@ num_classes = 28
 epochs = 200
 input_shape_iner = (107, 6)
 input_shape_ske = (41, 60)
-model = create_lstm_cnn_ensemble(input_shape_iner, input_shape_ske, num_classes)
 
 
 def visualize_history(history, prefix='', plot_loss=False, show=True):
@@ -75,6 +74,7 @@ hists = []
 for i in range(5):
     X_iner = trainX_iner[i]
     X_ske = trainX_ske[i]
+    model = create_lstm_cnn_ensemble(input_shape_iner, input_shape_ske, num_classes)
     hist = model.fit([X_iner, X_ske], [trainY_ske[i], trainY_iner[i], trainY_ske[i]], validation_data=(
         [testX_iner[i], testX_ske[i]], [testY_ske[i], testY_ske[i], testY_ske[i]]),
                      callbacks=[EarlyStopping(monitor='val_main_output_acc', patience=10, verbose=1, mode='auto')],

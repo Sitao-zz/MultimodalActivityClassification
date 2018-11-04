@@ -32,7 +32,6 @@ Model creation
 num_classes = 28
 input_shape_iner = (107, 6)
 input_shape_ske = (41, 60)
-model = create_lstm_ensemble(input_shape_iner, input_shape_ske, num_classes)
 
 """
 Model training and evaluation
@@ -50,6 +49,7 @@ avg_loss_iner = 0
 for i in range(5):
     X_iner = trainX_iner[i]
     X_ske = trainX_ske[i]
+    model = create_lstm_ensemble(input_shape_iner, input_shape_ske, num_classes)
     hist = model.fit([X_iner, X_ske], [trainY_ske[i], trainY_iner[i], trainY_ske[i]], validation_data=(
         [testX_iner[i], testX_ske[i]], [testY_ske[i], testY_ske[i], testY_ske[i]]),
                      callbacks=[EarlyStopping(monitor='val_main_output_acc', patience=10, verbose=1, mode='auto')],

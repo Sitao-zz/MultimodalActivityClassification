@@ -53,12 +53,3 @@ for i in range(5):
 
 print("average loss : " + str(avg_loss / 5))
 print("average accuracy: " + str(avg_val_acc / 5))
-
-print("\n\nEvaluation Summary")
-for i in range(5):
-    X_test_iner = testX_iner[i]
-    y_test_iner = testY_iner[i]
-
-    print("\nSubject index: " + str(i))
-    acc_iner = evaluate_accuracy(model, X_test_iner, y_test_iner)
-    print("::iner accuracy: " + str(acc_iner))
