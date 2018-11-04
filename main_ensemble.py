@@ -92,4 +92,4 @@ trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_in
 """
 Model training and evaluation
 """
-run(True)
+run()
