@@ -60,6 +60,11 @@ def run(plot=False):
                          callbacks=[EarlyStopping(monitor='val_acc', patience=10, verbose=0, mode='auto')],
                          epochs=epochs, verbose=0)
         hists.append(hist)
+
+        print("main loss [" + str(i) + "]" + str(hist.history['val_loss'][-1]))
+        print("main accuracy [" + str(i) + "]" + str(hist.history['val_acc'][-1]))
+        print("\n")
+
         avg_mae += hist.history['val_mean_absolute_error'][-1]
         avg_loss += hist.history['val_loss'][-1]
         avg_val_acc += hist.history['val_acc'][-1]

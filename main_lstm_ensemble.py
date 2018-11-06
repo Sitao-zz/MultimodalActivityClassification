@@ -42,6 +42,15 @@ def run():
             [testX_iner[i], testX_ske[i]], [testY_ske[i], testY_ske[i], testY_ske[i]]),
                          callbacks=[EarlyStopping(monitor='val_main_output_acc', patience=10, verbose=0, mode='auto')],
                          epochs=200, verbose=0)
+
+        print("main loss [" + str(i) + "]" + str(hist.history['val_main_output_loss'][-1]))
+        print("main accuracy [" + str(i) + "]" + str(hist.history['val_main_output_acc'][-1]))
+        print("ske loss [" + str(i) + "]" + str(hist.history['val_skeleton_output_loss'][-1]))
+        print("ske accuracy [" + str(i) + "]" + str(hist.history['val_skeleton_output_acc'][-1]))
+        print("iner loss [" + str(i) + "]" + str(hist.history['val_inertial_output_loss'][-1]))
+        print("iner accuracy [" + str(i) + "]" + str(hist.history['val_inertial_output_acc'][-1]))
+        print("\n")
+
         avg_mae += hist.history['val_main_output_mean_absolute_error'][-1]
         avg_loss += hist.history['val_main_output_loss'][-1]
         avg_val_acc += hist.history['val_main_output_acc'][-1]

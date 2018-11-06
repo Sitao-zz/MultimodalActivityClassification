@@ -53,6 +53,12 @@ def run():
                          callbacks=[EarlyStopping(monitor='val_acc', patience=10, verbose=0, mode='auto')],
                          epochs=epochs, batch_size=batch_size, verbose=0)
 
+        print("ske loss [" + str(i) + "]" + str(hist_ske.history['val_loss'][-1]))
+        print("ske accuracy [" + str(i) + "]" + str(hist_ske.history['val_acc'][-1]))
+        print("iner loss [" + str(i) + "]" + str(hist_iner.history['val_loss'][-1]))
+        print("iner accuracy [" + str(i) + "]" + str(hist_iner.history['val_acc'][-1]))
+        print("\n")
+
         avg_loss_iner += hist_iner.history['val_loss'][-1]
         avg_val_acc_iner += hist_iner.history['val_acc'][-1]
         avg_loss_ske += hist_ske.history['val_loss'][-1]
