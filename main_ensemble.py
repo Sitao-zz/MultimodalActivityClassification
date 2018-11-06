@@ -11,7 +11,7 @@ import sys
 import matplotlib.pyplot as plt
 from keras.callbacks import EarlyStopping
 
-from common.dataprep import definitions, get_dataset
+from common.dataprep import prepare_data
 from models.ensemble_lstm_cnn import create_lstm_cnn_ensemble
 
 
@@ -35,7 +35,7 @@ def visualize_history(history, prefix='', plot_loss=False, show=True):
         plt.show()
 
 
-def run(plot=False):
+def run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner, plot=False):
     """
     Model creation
     """
@@ -83,17 +83,8 @@ def run(plot=False):
         plt.show()
 
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(ROOT_DIR + "/dataset")
-
-"""
-Data preparation
-"""
-dataset, trainsets, validationsets = definitions()
-trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner = get_dataset(trainsets,
-                                                                                                             validationsets)
-
-"""
-Model training and evaluation
-"""
-run()
+if __name__ == "__main__":
+    ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+    sys.path.append(ROOT_DIR + "/dataset")
+    trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner = prepare_data()
+    run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner)

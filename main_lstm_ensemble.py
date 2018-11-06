@@ -10,11 +10,11 @@ import sys
 
 from keras.callbacks import EarlyStopping
 
-from common.dataprep import definitions, get_dataset
+from common.dataprep import prepare_data
 from models.ensemble_lstm import create_lstm_ensemble
 
 
-def run():
+def run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner):
     """
     Model creation
     """
@@ -72,17 +72,8 @@ def run():
     print("iner average accuracy: " + str(avg_val_acc_iner / 5))
 
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(ROOT_DIR + "/dataset")
-
-"""
-Data preparation
-"""
-dataset, trainsets, validationsets = definitions()
-trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner = get_dataset(trainsets,
-                                                                                                             validationsets)
-
-"""
-Model training and evaluation
-"""
-run()
+if __name__ == "__main__":
+    ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+    sys.path.append(ROOT_DIR + "/dataset")
+    trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner = prepare_data()
+    run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner)

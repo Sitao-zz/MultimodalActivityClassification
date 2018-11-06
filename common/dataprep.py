@@ -112,3 +112,8 @@ def get_dataset(trainsets, validationsets):
         trainY_iner[i] = label_binarizer.transform(trainY_iner[i])[:, 1:]
         testY_iner[i] = label_binarizer.transform(testY_iner[i])[:, 1:]
     return trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner
+
+
+def prepare_data():
+    dataset, trainsets, validationsets = definitions()
+    return get_dataset(trainsets, validationsets)
