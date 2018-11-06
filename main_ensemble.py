@@ -61,8 +61,8 @@ def run(plot=False):
                          epochs=epochs, verbose=0)
         hists.append(hist)
 
-        print("main loss [" + str(i) + "]" + str(hist.history['val_loss'][-1]))
-        print("main accuracy [" + str(i) + "]" + str(hist.history['val_acc'][-1]))
+        print("main loss [" + str(i) + "]\t" + str(hist.history['val_loss'][-1]))
+        print("main accuracy [" + str(i) + "]\t" + str(hist.history['val_acc'][-1]))
         print("\n")
 
         avg_mae += hist.history['val_mean_absolute_error'][-1]

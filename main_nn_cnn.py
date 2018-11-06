@@ -56,10 +56,10 @@ def run():
             visualize_history(hist_iner, 'inertial_%d-' % i, plot_loss=False)
             visualize_history(hist_ske, 'skeleton_%d-' % i, plot_loss=False)
 
-        print("ske loss [" + str(i) + "]" + str(hist_ske.history['val_loss'][-1]))
-        print("ske accuracy [" + str(i) + "]" + str(hist_ske.history['val_acc'][-1]))
-        print("iner loss [" + str(i) + "]" + str(hist_iner.history['val_loss'][-1]))
-        print("iner accuracy [" + str(i) + "]" + str(hist_iner.history['val_acc'][-1]))
+        print("ske loss [" + str(i) + "]\t" + str(hist_ske.history['val_loss'][-1]))
+        print("ske accuracy [" + str(i) + "]\t" + str(hist_ske.history['val_acc'][-1]))
+        print("iner loss [" + str(i) + "]\t" + str(hist_iner.history['val_loss'][-1]))
+        print("iner accuracy [" + str(i) + "]\t" + str(hist_iner.history['val_acc'][-1]))
         print("\n")
 
         avg_loss_ske += hist_ske.history['val_loss'][-1]
