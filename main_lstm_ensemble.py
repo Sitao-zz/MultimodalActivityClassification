@@ -18,7 +18,7 @@ def run():
     """
     Model creation
     """
-    num_classes = 28
+    num_classes = 27
     input_shape_iner = (107, 6)
     input_shape_ske = (41, 60)
 

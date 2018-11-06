@@ -104,11 +104,11 @@ def get_dataset(trainsets, validationsets):
     for i in range(5):
         trainX_ske[i] = np.array(trainX_ske[i])
         testX_ske[i] = np.array(testX_ske[i])
-        trainY_ske[i] = label_binarizer.transform(trainY_ske[i])
-        testY_ske[i] = label_binarizer.transform(testY_ske[i])
+        trainY_ske[i] = label_binarizer.transform(trainY_ske[i])[:, 1:]
+        testY_ske[i] = label_binarizer.transform(testY_ske[i])[:, 1:]
 
         trainX_iner[i] = np.array(trainX_iner[i])
         testX_iner[i] = np.array(testX_iner[i])
-        trainY_iner[i] = label_binarizer.transform(trainY_iner[i])
-        testY_iner[i] = label_binarizer.transform(testY_iner[i])
+        trainY_iner[i] = label_binarizer.transform(trainY_iner[i])[:, 1:]
+        testY_iner[i] = label_binarizer.transform(testY_iner[i])[:, 1:]
     return trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner

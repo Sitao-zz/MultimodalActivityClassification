@@ -11,7 +11,7 @@ import sys
 from keras.callbacks import EarlyStopping
 
 from common.dataprep import definitions, get_dataset
-from models.lstm_simple import create_lstm_simple
+from models.lstm_simple import create_lstm_ske, create_lstm_iner
 
 
 def run():
@@ -20,7 +20,7 @@ def run():
     """
     batch_size = 32
     epochs = 200
-    numClass = 28
+    num_classes = 27
     input_shape_iner = (107, 6)
     input_shape_ske = (41, 60)
 
@@ -40,18 +40,18 @@ def run():
         X_test_ske = testX_ske[i]
         y_test_ske = testY_ske[i]
 
-        model_iner = create_lstm_simple(input_shape_iner, numClass, 6, 0.01)
-        model_ske = create_lstm_simple(input_shape_ske, numClass, 60, 0.01)
+        model_iner = create_lstm_iner(input_shape_iner, num_classes, 6, 0.01)
+        model_ske = create_lstm_ske(input_shape_ske, num_classes, 60, 0.01)
         if i == 0:
             print(model_iner.summary())
             print(model_ske.summary())
 
         hist_iner = model_iner.fit(X_train_iner, y_train_iner, validation_data=(X_test_iner, y_test_iner),
-                         callbacks=[EarlyStopping(monitor='val_acc', patience=10, verbose=0, mode='auto')],
-                         epochs=epochs, batch_size=batch_size, verbose=0)
+                                   callbacks=[EarlyStopping(monitor='val_acc', patience=10, verbose=0, mode='auto')],
+                                   epochs=epochs, batch_size=batch_size, verbose=0)
         hist_ske = model_ske.fit(X_train_ske, y_train_ske, validation_data=(X_test_ske, y_test_ske),
-                         callbacks=[EarlyStopping(monitor='val_acc', patience=10, verbose=0, mode='auto')],
-                         epochs=epochs, batch_size=batch_size, verbose=0)
+                                 callbacks=[EarlyStopping(monitor='val_acc', patience=10, verbose=0, mode='auto')],
+                                 epochs=epochs, batch_size=batch_size, verbose=0)
 
         print("ske loss [" + str(i) + "]\t" + str(hist_ske.history['val_loss'][-1]))
         print("ske accuracy [" + str(i) + "]\t" + str(hist_ske.history['val_acc'][-1]))
