@@ -10,7 +10,7 @@ import sys
 
 from common.dataprep import definitions, get_dataset
 from common.utils import model_train_early_stop, visualize_history
-from models.nn_cnn import create_cnn
+from models.nn_cnn import create_cnn_ske, create_cnn_iner
 
 
 def run():
@@ -40,8 +40,8 @@ def run():
         X_test_ske = testX_ske[i]
         y_test_ske = testY_ske[i]
 
-        model_iner = create_cnn(input_shape_iner, num_classes)
-        model_ske = create_cnn(input_shape_ske, num_classes)
+        model_iner = create_cnn_iner(input_shape_iner, num_classes)
+        model_ske = create_cnn_ske(input_shape_ske, num_classes)
         if i == 0:
             print(model_iner.summary())
             print(model_ske.summary())

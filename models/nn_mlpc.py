@@ -18,8 +18,7 @@ def create_mlpc(input_shape, num_classes):
 
 
 def create_mlpc_layers(model_input, num_classes, out_name=''):
-    x = Dense(128, activation='relu')(model_input)
-    x = Flatten()(x)
+    x = Flatten()(model_input)
     x = Dense(128, activation='relu')(x)
     mlpc_out = Dropout(0.3)(x)
     x = Dense(num_classes, activation='softmax', name=out_name)(mlpc_out)
