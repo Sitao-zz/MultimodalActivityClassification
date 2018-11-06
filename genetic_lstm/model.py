@@ -16,6 +16,6 @@ class Model:
         model = create_lstm_simple(input_shape, self.numClass, num_neuros, num_dp)
         model.fit(self.X_train, self.Y_train,
                   callbacks=[EarlyStopping(monitor='acc', patience=10, verbose=0, mode='auto')],
-                  epochs=50, batch_size=100)
+                  epochs=50, batch_size=100, verbose=0)
         scores = model.evaluate(self.X_test, self.Y_test, verbose=0)
         return scores[1]

@@ -57,8 +57,8 @@ def run(plot=False):
             print(model.summary())
         hist = model.fit([X_iner, X_ske], trainY_ske[i], validation_data=(
             [testX_iner[i], testX_ske[i]], testY_ske[i]),
-                         callbacks=[EarlyStopping(monitor='val_acc', patience=10, verbose=1, mode='auto')],
-                         epochs=epochs)
+                         callbacks=[EarlyStopping(monitor='val_acc', patience=10, verbose=0, mode='auto')],
+                         epochs=epochs, verbose=0)
         hists.append(hist)
         avg_mae += hist.history['val_mean_absolute_error'][-1]
         avg_loss += hist.history['val_loss'][-1]
@@ -68,14 +68,13 @@ def run(plot=False):
     print("average loss : " + str(avg_loss / 5))
     print("average accuracy: " + str(avg_val_acc / 5))
 
-    print("\n\nEvaluation Summary")
-    for i in range(5):
-        hist = hists[i]
-        if i > 0:
-            plt.figure()
-        visualize_history(hist, 'multimodal_%d-' % i, show=False)
-
     if plot:
+        print("\n\nEvaluation Summary")
+        for i in range(5):
+            hist = hists[i]
+            if i > 0:
+                plt.figure()
+            visualize_history(hist, 'multimodal_%d-' % i, show=False)
         plt.show()
 
 

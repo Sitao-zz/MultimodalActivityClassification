@@ -32,8 +32,8 @@ def run():
         if i == 0:
             print(model.summary())
         hist = model.fit(X_iner, trainY_iner[i], validation_data=(testX_iner[i], testY_iner[i]),
-                         callbacks=[EarlyStopping(monitor='val_acc', patience=10, verbose=1, mode='auto')],
-                         epochs=epochs, batch_size=batch_size)
+                         callbacks=[EarlyStopping(monitor='val_acc', patience=10, verbose=0, mode='auto')],
+                         epochs=epochs, batch_size=batch_size, verbose=0)
 
         avg_loss += hist.history['val_loss'][-1]
         avg_val_acc += hist.history['val_acc'][-1]

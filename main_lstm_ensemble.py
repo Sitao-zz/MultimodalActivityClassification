@@ -40,8 +40,8 @@ def run():
             print(model.summary())
         hist = model.fit([X_iner, X_ske], [trainY_ske[i], trainY_iner[i], trainY_ske[i]], validation_data=(
             [testX_iner[i], testX_ske[i]], [testY_ske[i], testY_ske[i], testY_ske[i]]),
-                         callbacks=[EarlyStopping(monitor='val_main_output_acc', patience=10, verbose=1, mode='auto')],
-                         epochs=200)
+                         callbacks=[EarlyStopping(monitor='val_main_output_acc', patience=10, verbose=0, mode='auto')],
+                         epochs=200, verbose=0)
         avg_mae += hist.history['val_main_output_mean_absolute_error'][-1]
         avg_loss += hist.history['val_main_output_loss'][-1]
         avg_val_acc += hist.history['val_main_output_acc'][-1]
