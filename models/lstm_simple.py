@@ -10,7 +10,7 @@ def create_lstm_simple(input_shape, num_classes, num_neuros, num_dp):
     model.add(Dense(128, activation='relu'))
     model.add(Dropout(num_dp))
     model.add(Dense(num_classes, activation='softmax'))
-    model.compile(loss='categorical_crossentropy', optimizer='sgd', metrics=['accuracy'])
+    model.compile(loss='mse', optimizer='rmsprop', metrics=['accuracy'])
     return model
 
 

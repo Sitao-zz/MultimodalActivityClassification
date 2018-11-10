@@ -14,7 +14,7 @@ def create_cnn_lstm_ske(input_shape, num_classes):
     model_input = Input(shape=input_shape)
     cnn_out, x = create_cnn_lstm_layers_ske(model_input, num_classes)
     model = Model(model_input, x, name='cnn')
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    model.compile(loss='mse', optimizer='rmsprop', metrics=['accuracy'])
     return model
 
 
@@ -23,15 +23,12 @@ def create_cnn_lstm_layers_ske(model_input, num_classes, out_name=''):
                kernel_initializer='he_normal')(model_input)
     x = MaxPooling1D(pool_size=2)(x)
     x = Dropout(0.5)(x)
-    x = Conv1D(filters=56, kernel_size=3, padding="same", activation='relu')(x)
-    x = LSTM(128, return_sequences=False)(x)
-    x = Dense(128)(x)
-    x = LeakyReLU()(x)
-    x = Dropout(0.5)(x)
-    x = Dense(128)(x)
-    cnn_out = LeakyReLU()(x)
-    x = Dense(num_classes, activation='softmax', name=out_name)(cnn_out)
-    return cnn_out, x
+    x = Conv1D(filters=17, kernel_size=3, padding="same", data_format="channels_first", activation='relu')(x)
+    x = LSTM(128, input_shape=(17, 60), return_sequences=True)(x)
+    x = LSTM(256, return_sequences=False)(x)
+    cnn_lstm_out = Dense(128)(x)
+    x = Dense(num_classes, activation='softmax', name=out_name)(cnn_lstm_out)
+    return cnn_lstm_out, x
 
 
 def create_cnn_lstm_iner(input_shape, num_classes):
@@ -45,7 +42,7 @@ def create_cnn_lstm_iner(input_shape, num_classes):
     model_input = Input(shape=input_shape)
     cnn_out, x = create_cnn_lstm_layers_iner(model_input, num_classes)
     model = Model(model_input, x, name='cnn')
-    model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+    model.compile(loss='mse', optimizer='rmsprop', metrics=['accuracy'])
     return model
 
 
@@ -55,13 +52,8 @@ def create_cnn_lstm_layers_iner(model_input, num_classes, out_name=''):
     x = MaxPooling1D(pool_size=2)(x)
     x = Dropout(0.5)(x)
     x = Conv1D(filters=50, kernel_size=3, padding="same", data_format="channels_first", activation='relu')(x)
-    x = MaxPooling1D(pool_size=2)(x)
-    x = Dropout(0.5)(x)
-    x = LSTM(64, return_sequences=False)(x)
-    x = Dense(64)(x)
-    x = LeakyReLU()(x)
-    x = Dropout(0.5)(x)
-    x = Dense(64)(x)
-    cnn_out = LeakyReLU()(x)
-    x = Dense(num_classes, activation='softmax', name=out_name)(cnn_out)
-    return cnn_out, x
+    x = LSTM(50, input_shape=(50, 6), return_sequences=True)(x)
+    x = LSTM(100, return_sequences=False)(x)
+    cnn_lstm_out = Dense(50)(x)
+    x = Dense(num_classes, activation='softmax', name=out_name)(cnn_lstm_out)
+    return cnn_lstm_out, x
