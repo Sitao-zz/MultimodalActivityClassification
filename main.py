@@ -25,15 +25,15 @@ def main():
     print("\n\n:::LSTM model:::")
     main_lstm.run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner)
 
-    print("\n\n:::LSTM ensemble model:::")
-    main_lstm_ensemble.run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner,
-                           testY_iner)
+    # print("\n\n:::LSTM ensemble model:::")
+    # main_lstm_ensemble.run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner,
+    #                        testY_iner)
 
     print("\n\n:::Hybrid CNN + LSTM model:::")
     main_cnn_lstm.run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner)
 
-    print("\n\n:::CNN + LSTM ensemble model:::")
-    main_ensemble.run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner)
+    # print("\n\n:::CNN + LSTM ensemble model:::")
+    # main_ensemble.run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner)
 
 
 if __name__ == "__main__":
