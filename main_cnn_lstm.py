@@ -7,10 +7,13 @@ Created on Sun Nov  5 22:14:10 2017
 
 import os
 import sys
+import matplotlib.pyplot as plt
 
 from common.dataprep import prepare_data
 from common.utils import model_train_early_stop, visualize_history
 from models.cnn_lstm import create_cnn_lstm_iner, create_cnn_lstm_ske
+
+from common.utils import evaluate_classification
 
 
 def run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner):
@@ -52,6 +55,9 @@ def run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, 
         hist_ske = model_train_early_stop(model_ske, X_train_ske, y_train_ske, X_test_ske, y_test_ske,
                                           batch_size, num_epochs=epochs)
 
+        evaluate_classification(model_iner, X_test_iner, y_test_iner, 'cnn-lstm_inertial_%d-Confusion Matrix' % i)
+        evaluate_classification(model_ske, X_test_ske, y_test_ske, 'cnn-lstm_skeleton_%d-Confusion Matrix' % i)
+
         if VISUALIZATION:
             visualize_history(hist_iner, 'inertial_%d-' % i, plot_loss=False)
             visualize_history(hist_ske, 'skeleton_%d-' % i, plot_loss=False)
@@ -71,6 +77,7 @@ def run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, 
     print("ske average accuracy: " + str(avg_val_acc_ske / 5))
     print("iner average loss: " + str(avg_loss_iner / 5))
     print("iner average accuracy: " + str(avg_val_acc_iner / 5))
+    plt.show()
 
 
 if __name__ == "__main__":

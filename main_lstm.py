@@ -7,11 +7,14 @@ Created on Sun Nov  5 22:14:10 2017
 
 import os
 import sys
+import matplotlib.pyplot as plt
 
 from keras.callbacks import EarlyStopping
 
 from common.dataprep import prepare_data
 from models.lstm_simple import create_lstm_ske, create_lstm_iner
+
+from common.utils import evaluate_classification
 
 
 def run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner):
@@ -53,6 +56,9 @@ def run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, 
                                  callbacks=[EarlyStopping(monitor='val_acc', patience=10, verbose=0, mode='auto')],
                                  epochs=epochs, batch_size=batch_size, verbose=0)
 
+        evaluate_classification(model_iner, X_test_iner, y_test_iner, 'lstm_inertial_%d-Confusion Matrix' % i)
+        evaluate_classification(model_ske, X_test_ske, y_test_ske, 'lstm_skeleton_%d-Confusion Matrix' % i)
+
         print("ske loss [" + str(i) + "]\t" + str(hist_ske.history['val_loss'][-1]))
         print("ske accuracy [" + str(i) + "]\t" + str(hist_ske.history['val_acc'][-1]))
         print("iner loss [" + str(i) + "]\t" + str(hist_iner.history['val_loss'][-1]))
@@ -68,6 +74,7 @@ def run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, 
     print("iner average accuracy: " + str(avg_val_acc_iner / 5))
     print("ske average loss : " + str(avg_loss_ske / 5))
     print("ske average accuracy: " + str(avg_val_acc_ske / 5))
+    plt.show()
 
 
 if __name__ == "__main__":
