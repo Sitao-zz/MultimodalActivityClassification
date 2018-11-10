@@ -3,7 +3,7 @@ from keras.layers import Dense, Input
 from keras.models import Model
 
 from models.lstm_simple import create_lstm_layers_iner
-from models.nn_cnn import create_cnn_layers
+from models.nn_cnn import create_cnn_layers_ske
 
 
 def create_lstm_cnn_ensemble(input_shape_iner, input_shape_ske, num_classes):
@@ -11,9 +11,9 @@ def create_lstm_cnn_ensemble(input_shape_iner, input_shape_ske, num_classes):
     iner_lstm_out, inertial_out = create_lstm_layers_iner(inertial_input, input_shape_iner, num_classes, "inertial_output")
 
     skeleton_input = Input(shape=input_shape_ske, name="ske_lstm_input")
-    ske_lstm_out, skeleton_out = create_cnn_layers(skeleton_input, num_classes,"skeleton_output")
+    ske_cnn_out, skeleton_out = create_cnn_layers_ske(skeleton_input, num_classes, "skeleton_output")
 
-    merge = keras.layers.concatenate([iner_lstm_out, ske_lstm_out])
+    merge = keras.layers.concatenate([iner_lstm_out, ske_cnn_out])
     dense_1 = Dense(128, activation='relu')(merge)
     # dense_2 = Dense(128, activation = 'relu')(dense_1)
     main_output = Dense(units=num_classes, activation='softmax', name='main_output')(dense_1)

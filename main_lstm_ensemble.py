@@ -10,15 +10,15 @@ import sys
 
 from keras.callbacks import EarlyStopping
 
-from common.dataprep import definitions, get_dataset
+from common.dataprep import prepare_data
 from models.ensemble_lstm import create_lstm_ensemble
 
 
-def run():
+def run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner):
     """
     Model creation
     """
-    num_classes = 28
+    num_classes = 27
     input_shape_iner = (107, 6)
     input_shape_ske = (41, 60)
 
@@ -40,8 +40,17 @@ def run():
             print(model.summary())
         hist = model.fit([X_iner, X_ske], [trainY_ske[i], trainY_iner[i], trainY_ske[i]], validation_data=(
             [testX_iner[i], testX_ske[i]], [testY_ske[i], testY_ske[i], testY_ske[i]]),
-                         callbacks=[EarlyStopping(monitor='val_main_output_acc', patience=10, verbose=1, mode='auto')],
-                         epochs=200)
+                         callbacks=[EarlyStopping(monitor='val_main_output_acc', patience=10, verbose=0, mode='auto')],
+                         epochs=200, verbose=0)
+
+        print("main loss [" + str(i) + "]\t" + str(hist.history['val_main_output_loss'][-1]))
+        print("main accuracy [" + str(i) + "]\t" + str(hist.history['val_main_output_acc'][-1]))
+        print("ske loss [" + str(i) + "]\t" + str(hist.history['val_skeleton_output_loss'][-1]))
+        print("ske accuracy [" + str(i) + "]\t" + str(hist.history['val_skeleton_output_acc'][-1]))
+        print("iner loss [" + str(i) + "]\t" + str(hist.history['val_inertial_output_loss'][-1]))
+        print("iner accuracy [" + str(i) + "]\t" + str(hist.history['val_inertial_output_acc'][-1]))
+        print("\n")
+
         avg_mae += hist.history['val_main_output_mean_absolute_error'][-1]
         avg_loss += hist.history['val_main_output_loss'][-1]
         avg_val_acc += hist.history['val_main_output_acc'][-1]
@@ -63,17 +72,8 @@ def run():
     print("iner average accuracy: " + str(avg_val_acc_iner / 5))
 
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(ROOT_DIR + "/dataset")
-
-"""
-Data preparation
-"""
-dataset, trainsets, validationsets = definitions()
-trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner = get_dataset(trainsets,
-                                                                                                             validationsets)
-
-"""
-Model training and evaluation
-"""
-run()
+if __name__ == "__main__":
+    ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+    sys.path.append(ROOT_DIR + "/dataset")
+    trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner = prepare_data()
+    run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner)

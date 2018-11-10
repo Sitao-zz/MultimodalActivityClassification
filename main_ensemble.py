@@ -11,7 +11,7 @@ import sys
 import matplotlib.pyplot as plt
 from keras.callbacks import EarlyStopping
 
-from common.dataprep import definitions, get_dataset
+from common.dataprep import prepare_data
 from models.ensemble_lstm_cnn import create_lstm_cnn_ensemble
 
 
@@ -35,11 +35,11 @@ def visualize_history(history, prefix='', plot_loss=False, show=True):
         plt.show()
 
 
-def run(plot=False):
+def run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner, plot=False):
     """
     Model creation
     """
-    num_classes = 28
+    num_classes = 27
     epochs = 200
     input_shape_iner = (107, 6)
     input_shape_ske = (41, 60)
@@ -57,9 +57,14 @@ def run(plot=False):
             print(model.summary())
         hist = model.fit([X_iner, X_ske], trainY_ske[i], validation_data=(
             [testX_iner[i], testX_ske[i]], testY_ske[i]),
-                         callbacks=[EarlyStopping(monitor='val_acc', patience=10, verbose=1, mode='auto')],
-                         epochs=epochs)
+                         callbacks=[EarlyStopping(monitor='val_acc', patience=10, verbose=0, mode='auto')],
+                         epochs=epochs, verbose=0)
         hists.append(hist)
+
+        print("main loss [" + str(i) + "]\t" + str(hist.history['val_loss'][-1]))
+        print("main accuracy [" + str(i) + "]\t" + str(hist.history['val_acc'][-1]))
+        print("\n")
+
         avg_mae += hist.history['val_mean_absolute_error'][-1]
         avg_loss += hist.history['val_loss'][-1]
         avg_val_acc += hist.history['val_acc'][-1]
@@ -68,28 +73,18 @@ def run(plot=False):
     print("average loss : " + str(avg_loss / 5))
     print("average accuracy: " + str(avg_val_acc / 5))
 
-    print("\n\nEvaluation Summary")
-    for i in range(5):
-        hist = hists[i]
-        if i > 0:
-            plt.figure()
-        visualize_history(hist, 'multimodal_%d-' % i, show=False)
-
     if plot:
+        print("\n\nEvaluation Summary")
+        for i in range(5):
+            hist = hists[i]
+            if i > 0:
+                plt.figure()
+            visualize_history(hist, 'multimodal_%d-' % i, show=False)
         plt.show()
 
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(ROOT_DIR + "/dataset")
-
-"""
-Data preparation
-"""
-dataset, trainsets, validationsets = definitions()
-trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner = get_dataset(trainsets,
-                                                                                                             validationsets)
-
-"""
-Model training and evaluation
-"""
-run()
+if __name__ == "__main__":
+    ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+    sys.path.append(ROOT_DIR + "/dataset")
+    trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner = prepare_data()
+    run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner)

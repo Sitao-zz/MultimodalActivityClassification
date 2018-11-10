@@ -8,12 +8,12 @@ from genetic_lstm.genetic import GeneticEngine
 from common.dataprep_iner import definitions
 
 start = dt.now()
-X_train, X_test, Y_train, Y_test, numClass = definitions()
+X_train, X_test, Y_train, Y_test, num_classes = definitions()
 
 print("::::: [main] Load data ", dt.now() - start, ":::::")
 
 start = dt.now()
-engine = GeneticEngine(X_train, Y_train, X_test, Y_test, numClass)
+engine = GeneticEngine(X_train, Y_train, X_test, Y_test, num_classes)
 print("::::: [main] Initialize GeneticEngine ", dt.now() - start, ":::::")
 
 start = dt.now()

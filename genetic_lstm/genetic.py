@@ -17,8 +17,8 @@ N_CYCLES = 1
 
 class GeneticEngine:
 
-    def __init__(self, X_train, Y_train, X_test, Y_test, numClass):
-        self.model = Model(X_train, Y_train, X_test, Y_test, numClass)
+    def __init__(self, X_train, Y_train, X_test, Y_test, num_classes):
+        self.model = Model(X_train, Y_train, X_test, Y_test, num_classes)
 
         # To assure reproductibility, the RNG seed is set prior to the items
         # dict initialization. It is also seeded in main().

@@ -8,18 +8,18 @@ Created on Sun Nov  5 22:14:10 2017
 import os
 import sys
 
-from common.dataprep import definitions, get_dataset
+from common.dataprep import prepare_data
 from common.utils import model_train_early_stop, visualize_history
-from models.nn_cnn import create_cnn
+from models.nn_cnn import create_cnn_ske, create_cnn_iner
 
 
-def run():
+def run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner):
     """
     Model configuration
     """
     batch_size = 32
     epochs = 200
-    num_classes = 28
+    num_classes = 27
     input_shape_iner = (107, 6)
     input_shape_ske = (41, 60)
 
@@ -40,8 +40,8 @@ def run():
         X_test_ske = testX_ske[i]
         y_test_ske = testY_ske[i]
 
-        model_iner = create_cnn(input_shape_iner, num_classes)
-        model_ske = create_cnn(input_shape_ske, num_classes)
+        model_iner = create_cnn_iner(input_shape_iner, num_classes)
+        model_ske = create_cnn_ske(input_shape_ske, num_classes)
         if i == 0:
             print(model_iner.summary())
             print(model_ske.summary())
@@ -56,9 +56,14 @@ def run():
             visualize_history(hist_iner, 'inertial_%d-' % i, plot_loss=False)
             visualize_history(hist_ske, 'skeleton_%d-' % i, plot_loss=False)
 
+        print("ske loss [" + str(i) + "]\t" + str(hist_ske.history['val_loss'][-1]))
+        print("ske accuracy [" + str(i) + "]\t" + str(hist_ske.history['val_acc'][-1]))
+        print("iner loss [" + str(i) + "]\t" + str(hist_iner.history['val_loss'][-1]))
+        print("iner accuracy [" + str(i) + "]\t" + str(hist_iner.history['val_acc'][-1]))
+        print("\n")
+
         avg_loss_ske += hist_ske.history['val_loss'][-1]
         avg_val_acc_ske += hist_ske.history['val_acc'][-1]
-
         avg_loss_iner += hist_iner.history['val_loss'][-1]
         avg_val_acc_iner += hist_iner.history['val_acc'][-1]
 
@@ -68,17 +73,8 @@ def run():
     print("iner average accuracy: " + str(avg_val_acc_iner / 5))
 
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(ROOT_DIR + "/dataset")
-
-"""
-Data preparation
-"""
-dataset, trainsets, validationsets = definitions()
-trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner = get_dataset(trainsets,
-                                                                                                             validationsets)
-
-"""
-Model training and evaluation
-"""
-run()
+if __name__ == "__main__":
+    ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+    sys.path.append(ROOT_DIR + "/dataset")
+    trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner = prepare_data()
+    run(trainX_ske, trainY_ske, testX_ske, testY_ske, trainX_iner, trainY_iner, testX_iner, testY_iner)
