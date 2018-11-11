@@ -7,10 +7,10 @@ from common.dataprep import definitions
 dataset, trainsets, validationsets = definitions()
 
 """ Inertial Dataset """
-inertial_dataset = {i: {'inertial': sio.loadmat('dataset/Inertial/' + i + '_inertial.mat')['d_iner']} for i in dataset}
+inertial_dataset = {i: {'inertial': sio.loadmat('../dataset/Inertial/' + i + '_inertial.mat')['d_iner']} for i in dataset}
 
 """ Skeleton Dataset """
-skeletons_dataset = {i: {'sk': sio.loadmat('dataset/Skeleton/' + i + '_skeleton.mat')['d_skel']} for i in dataset}
+skeletons_dataset = {i: {'sk': sio.loadmat('../dataset/Skeleton/' + i + '_skeleton.mat')['d_skel']} for i in dataset}
 
 jointType = {'hip_center': 0, 'spine': 1, 'shoulder_c': 2, 'head': 3,
              'shoulder_r': 4, 'elbow_r': 5, 'wrist_r': 6, 'hand_r': 7,

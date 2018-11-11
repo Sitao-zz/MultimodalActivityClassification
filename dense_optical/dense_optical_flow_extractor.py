@@ -5,7 +5,7 @@ import pickle as pk
 from common.dataprep import definitions
 
 dataset, trainsets, validationsets = definitions()
-depth_dataset = {i: {'depth': sio.loadmat('dataset/Depth/' + i + '_depth.mat')['d_depth']} for i in dataset}
+depth_dataset = {i: {'depth': sio.loadmat('../dataset/Depth/' + i + '_depth.mat')['d_depth']} for i in dataset}
 
 
 def processRGBData(cap, sub):
